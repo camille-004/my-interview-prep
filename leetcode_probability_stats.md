@@ -44,7 +44,7 @@ The only component out of the ones we need to find that isn't trivial is the med
 
 **Code**
 ```python
-def sampleStats(self, count):
+def sample_stats(count):
     minimum = next((i for i, x in enumerate(count) if x != 0), None)
     maximum = len(count) - next((i for i, x in enumerate(count[::-1]) if x != 0), None) - 1
     mean = sum(i * x for i, x in enumerate(count)) / sum(count)
