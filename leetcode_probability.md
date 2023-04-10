@@ -22,7 +22,7 @@ Consider the range 11-20. If we take one of these numbers, like 13, 13 % 10 = 3.
 
 This will work for the range 21-30 and 31-40 as well. However, since we don't have 50 in the matrix, this won't work for the range 41-49. Therefore, we should ignore 41-49 and focus on rows 1-6.
 
-To get a random column index, just call `rand7()`. To get the row index, as it only include up to row 6, (max index can be 41, which is row 6 column 7), call `rand7() - 1`. To get the value at this row, use `(rand7() - 1) * 7`. Then, add the column index: `(rand7() - 1) * 7 + rand7()`. Finally, apply `((n - 1) % 10) + 1` to the result.
+To get a random column index, just call `rand7()`. To get the row index, as it only include up to row 6, since the index cannot be greater than 40, call `rand7() - 1`. To get the value at this row, use `(rand7() - 1) * 7`. Then, add the column index: `(rand7() - 1) * 7 + rand7()`. Finally, apply `((n - 1) % 10) + 1` to the result.
 
 **Code**
 ```python
