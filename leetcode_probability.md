@@ -35,3 +35,37 @@ def rand10():
     
     return ((idx - 1) % 10) + 1
 ```
+
+## Statistics from a Large Sample
+
+https://leetcode.com/problems/statistics-from-a-large-sample/description/
+
+The only component out of the ones we need to find that isn't trivial is the median. To do this, we need to take the average of the two middle elements (if the length of the dataset is even). To this end, we define a `left_median`, whose index increases until we reach the middle value, and `right_median`, whose index increases through the reversed frequency table until we reach the middle value. Then, we take the average of these values.
+
+**Code**
+```python
+def sampleStats(self, count):
+    minimum = next((i for i, x in enumerate(count) if x != 0), None)
+    maximum = len(count) - next((i for i, x in enumerate(count[::-1]) if x != 0), None) - 1
+    mean = sum(i * x for i, x in enumerate(count)) / sum(count)
+
+    num_count = 0
+    left_median = 0
+    for i, c in enumerate(count):
+        num_count += c
+        if num_count >= sum(count) / 2:
+            left_median = i
+            break
+
+    num_count = 0
+    right_median = 0
+    for i, c in reversed(list(enumerate(count))):
+        num_count += c
+        if num_count >= sum(count) / 2:
+            right_median = i
+            break
+
+    median = (left_median + right_median) / 2
+    mode = count.index(max(count))
+    return [minimum, maximum, mean, median, mode]
+```
