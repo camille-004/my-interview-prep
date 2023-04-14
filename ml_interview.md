@@ -268,12 +268,21 @@ $$
 Where p is the probability and it takes values between 0 and 1. If we now apply the logit function to p, it results in:
 
 $$
-\text{logit}(p) = \text{log}(\frac{p}{1 - p}}=b_0 + b_1x
+\text{logit}(p) = \text{log}(\frac{p}{1 - p})=b_0 + b_1x
 $$
 
+![LogisticRegression](logistic_regression.png)
 
 
 # Decision Trees
+
+## What is the decision tree algorithm?
+
+A decision tree is a supervised ML algorithm that can be used for both regression and classification problem statements. It divides the complete dataset into smaller subsets while, at the same time, an  associated decision tree is incrementally developed.
+
+A machine learning model like a decision tree can be easily trained on a dataset by finding the best splits to make at each node. The decision trees' final output is a tree with decision nodes and leaf nodes. A decision tree can operate on both categorical and numerical data.
+
+Unlike deep learning, DTs are very easy to interpret and understand, making them a popular choice for decision-making applications.
 
 ## What is the default method for splitting in decision trees?
 
