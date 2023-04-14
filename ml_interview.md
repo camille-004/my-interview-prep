@@ -431,7 +431,7 @@ Pruning is the process of removing sub-nodes of a decision tree, and it is the o
 
 Ensemble technique that averages several decision trees on different parts of the same training set, with the objective of overcoming overfitting of individual decision trees. It's used for both classification and regression problem statements that operate by constructing a lot of decision trees at the same time.
 
-![RandomForest](#random_forest.png)
+![RandomForest](random_forest.png)
 
 # XGBoost
 
