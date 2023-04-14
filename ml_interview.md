@@ -427,11 +427,110 @@ Pruning is the process of removing sub-nodes of a decision tree, and it is the o
 
 # Random Forests
 
+
+| Pros      | Cons |
+| ----------- | ----------- |
+| RF is unbiased as we train multiple decision trees and each tree is trained on a subset of the same training data. | Complexity: more computational resources are required and results in a large number of decision trees combined together |
+| Stable: if we introduce new data points, it is pretty hard to impact all trees | Longer training time |
+| Handles both continuous and categorical variables   | Not good at generalizing caseese with completely new data (example: if we know the cost of one ice cream is 1 dollar, 2 ice creams cost 2 dollars, then how much do 10 ice creams cost? Linear regression can easily figure this out, while a RF has no way of finding the answer) |
+| Performs well, even with missing values | Biased towards categorical variables having multiple levels or categories: feature selection technique is based on the reduction in impurity and biased towards preferring variables with more categories |
+
 ## What is the random forest algorithm?
 
 Ensemble technique that averages several decision trees on different parts of the same training set, with the objective of overcoming overfitting of individual decision trees. It's used for both classification and regression problem statements that operate by constructing a lot of decision trees at the same time.
 
 ![RandomForest](random_forest.png)
+
+## Why is the random forest algorithm popular?
+
+There are very few assumptions attached to it so data preparation is less challenging, saving time. Like many ensembling techniques, it empirically performs very well.
+
+## What is bagging?
+
+Bagging (**bootstrap aggregating**) involves generating K new training datasets. Each new training dataset picks a sample of data points with replacements (known as **bootstrap samples**) from the dataset. The K models are fitted using the K bootstrap samples formed and then for predictions we combine the result of all trees by averaging the output (for regression) or voting (for classification).
+
+## Explain the working of the random forest algorithm.
+
+1. Pick K random records from the dataset having a total of N records.
+2. Build and train a decision tree model on these K records..
+3. Choose the number of trees you want in your algorithm and repeat steps 1 and 2.
+4. In the case of regression, for an unseen data point, each tree in the forest predicts a value for output. The final value can be calculated by taking the mean or average of the values.
+
+## Why do we prefer a forest rather than a single tree?
+
+The problem of overfitting takes place when we have a flexible model. A flexible model is having highvariance because the learned parameters like the structure of the decision tree will vary with the training. On the contrary, an inflexible model is said to have high bias as it makes assumptions about the training data and an inflexbiel model may not have the capacity to fit even the training data and in both situations, the model has high variance, and high bias implies the model is not able to generalize new and unseen data points properly. So, we have to build a model carefully by keeping the bias-variance tradeoff in mind.
+
+Decision trees have unlimited flexibility, which means it keeps growing, unless, for every single observation, there is one leaf node present. Moreover, instead of limiting depth of the tree, which results in reduced variance and an increase in bias, we can combine many decision trees that eventually convert into a forest, known as a single ensemble model.
+
+## What is out-of-bag error?
+
+Out-of-bag is equivalent to validation or test data. In random forests, there is no need for a separate testing dataset to validate the result. It is calculated internally: as the forest is built on training data, each tree is tested on 1/3rd of the samples that are not used in building that tree. This is known as the out-of-bag error estimate which in short is an internal error estimate of a random forest as it is being constructed.
+
+## What does 'random' refer to in "random forest"?
+
+Refers to two processes:
+- Random observations to grow each tree.
+- Random variables selected for splitting at each node.
+
+**Random record selection**: Each tree in the forest is trained on roughly 2/3rd of the total training data, and here, the data points are drawn at random with replacement from the original training dataset.
+
+**Random variable selection**: Some independent variables, m, are selected at random out of all the predictor variables, and the best split on this m is used to split the node.
+- By default, m is taken as the square root of the total number of predictors for classification, whereas for regression, m is the total number of all predictors divided  by 3.
+
+## Why does the random forest algorithm not require split sampling methods?
+
+Random Forest does not require a split sampling method to assess the accuracy of a model. This is because it performs internal testing on 2/3rd of the available training data used to grow each tree, and the remaining 1/3rd used to calculate out-of-bag error.
+
+## What are the features of bagged trees?
+
+1. Reduces variance by averaging the ensemble's results.
+2. Resulting model uses the entire feature space when considering node splits.
+3. Allows the trees to grow without pruning, reducing the tree-depth sizes which results in high variance but lower bias, which can help improve prediction power.
+
+## What are the limitations of bagging trees?
+
+The major limitation is that it uses the entire feature space when creating splits in the trees. Suppose from all the variables within the feature space, some are indicating certain predictions, so there is a risk of having a forest with correlated trees, which acutally increases bias and reduces variance.
+
+## What does the forest error rate depend on?
+
+- How correlated the two trees in the forest are (increasing the correlation increases the error rate)
+- How strong each individual tree in the forest is (a tree with a low error rate is considered a strong classifier)
+
+## How does a random forest algorithm give predictions on an unseen dataset?
+
+After training the algorithm, each tree in the forest gives a classification on leftover data (OOB), and we say the tree "votes" for that class. For example, suppose we fit 500 trees, and a case is out-of-bag in 200 of them:
+- 160 trees vote class 1
+- 40 trees vote class 2
+
+In this case, the RF score is class 1 since the probability for that case would be 0.8 (160/200). Similarly, it would be an average of the target variable for the regression problem.
+
+## How do we determine the overall OOB score for the classification problem statements in RF?
+
+For each tree, by using the leftover (33%) data, compute the misclassification rate, which is known as the OOB error rate. Finally, we aggregate all the errors from all trees and we will determine the overall OOB error rate for the misclassification
+
+## What is the use of the proximity matrix in the RF algorithm?
+
+- Missing value imputation
+- Detection of outliers
+
+## How does RF define the proximity between observations?
+- Initialize proximities to zero.
+- For any given tree, apply all the cases to the tree.
+- If case i and case j both end up in the same node, then prox(ij) between i and j increases by 1.
+- Accumulate over all trees and normalize by twice the number of trees in RF.
+
+Finally, it creates a proximity matrix, i.e., a square matrix with entry as 1 on the diagonal and values between 0 and 1 in the off-diagonal positions. Proximities are close to 1 when the observations are "alike" and conversely the closer proximity to 0, the more dissimilar the cases are.
+
+## How do random forests select the important features?
+- **Mean decrease accuracy**: If we drop that variable, how much the model accuracy decreases.
+- **Mean decrease Gini**: Calculation of splits in trees based on the Gini impurity index
+
+## What are the steps of calculating variable importance in RF?
+1. For each tree grown in a random forest, find the number of votes for the correct class in out-of-bag data.
+2. Perform random permutation (order) of a predictor's values in the OOB data and then check the number of votes for the correct class.
+3. At this steps, we subtract the number of votes for the correct class in the variable k-permuted data from the number of votes for the correct class in the original OOB data.
+4. Now, the raw importance score for variable k is the average of this number over all trees in the forest. Then, normalize the score by taking the standard deviation.
+
 
 # XGBoost
 
