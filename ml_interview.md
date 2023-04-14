@@ -247,7 +247,7 @@ P(y) is the probability that the output label belogns to one class. If for some 
 
 ## Provide a mathematical intuition for logistic regression.
 
-Logistic regression can be seen as a transformation from linear regression using the logistic function , also known as the sigmoid function.
+Logistic regression can be seen as a transformation from linear regression using the logistic function, also known as the sigmoid function.
 
 $$
 S(x) = \frac{1}{1 + e^{-x}}
