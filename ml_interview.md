@@ -284,9 +284,32 @@ A machine learning model like a decision tree can be easily trained on a dataset
 
 Unlike deep learning, DTs are very easy to interpret and understand, making them a popular choice for decision-making applications.
 
+![DecisionTree](decision_tree.png)
+
 ## What is the default method for splitting in decision trees?
 
 The default method is the **Gini index**, which is the measure of impurity of a particular node. Essentially, it calculates the probability of a specific feature that is classified incorrectly. When the elements are linked by a single class, we call this "pure". It is preferred because it is not computationally intensive and doesn't involve logarithm function.
+
+## List down some popular algorithms used for deriving Decision Trees and their attribute selection measures.
+
+1. **ID3 (Iterative Dichotomiser)**: Uses Information Gain as an attribute selection measure.
+2. **C4.5 (Successor of ID3)**: Uses Gain Ratio as an attribute selection measure.
+3. **CART (Classification algorithm and Regression Trees)**: Uses Gini Index as an attribute selection measure.
+
+## Explain the CART Algorithm for Decision Trees.
+
+**Classification Algorithm and Regression Trees** is a greedy algorithm that greedily searches for an optimum split at the top level, then repeats the same process at each of the subsequent levels.
+
+Moreover, it verifies whether the split will lead to the lowest impurity, and the solution provided by the greedy algorithm is not guaranteed to be optimal. It often procues a reasonably good solution since finding the optimal Tree is an NP-Complete problem requiring exponential time complexity.
+
+As a result, it makes problem intractable even for small training sets. This is why we must choose a "reasonably good" solution instead of an optimal one.
+
+## List down the attribute selection measures usde by the ID3 algorithm to construct a Decision Tree.
+
+The mostly widely used algorithm for building a DT is called ID3. ID3 uses entropy and information gain as attribute selection measures to construct a decision tree.
+
+1. **Entropy**: A DT is built top-down from a root node and involves the partitioning of data into homogeneous subsets. To check the homogeneity of a sample, ID3 uses entropy. Therefore, entropy is zero when the sample is completely ghomogeneous, and entropy of one when the sample is equally divided between different classes.
+2. **Information Gain**: Information Gain is based on the decrease in entropy after splitting a dataset based on an attribute. The meaning of constructing a DT is all about finding the attributes having the highest information gain.
 
 # Random Forests
 
