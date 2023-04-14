@@ -288,7 +288,7 @@ $$
 
 ## What is the decision tree algorithm?
 
-A decision tree is a supervised ML algorithm that can be used for both regression and classification problem statements. It divides the complete dataset into smaller subsets while, at the same time, an  associated decision tree is incrementally developed.
+A decision tree is a supervised ML algorithm that can be used for both regression and classification problem statements. It divides the complete dataset into smaller subsets while, at the same time, an associated decision tree is incrementally developed.
 
 A machine learning model like a decision tree can be easily trained on a dataset by finding the best splits to make at each node. The decision trees' final output is a tree with decision nodes and leaf nodes. A decision tree can operate on both categorical and numerical data.
 
@@ -386,7 +386,7 @@ The testing time complexity is O(depth) as we have to traverse from the root to 
 - Fill the missing attribute value with the most common value of that attribute.
 - Fill in the missing value by assigning a probability to each of the possible values of the attribute based on other samples.
 
-## How does a decisiion tree handle continuous features?
+## How does a decision tree handle continuous features?
 
 Decision Trees handle continuous features by converting features into a threshold-based boolean feature. We use information gain to choose the threshold.
 
@@ -430,6 +430,8 @@ Pruning is the process of removing sub-nodes of a decision tree, and it is the o
 ## What is the random forest algorithm?
 
 Ensemble technique that averages several decision trees on different parts of the same training set, with the objective of overcoming overfitting of individual decision trees. It's used for both classification and regression problem statements that operate by constructing a lot of decision trees at the same time.
+
+![RandomForest](#random_forest.png)
 
 # XGBoost
 
