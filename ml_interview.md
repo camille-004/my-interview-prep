@@ -192,17 +192,98 @@ Plots the quantiles of two distributions with respect to each other. You should 
 
 # Logistic Regression
 
+| Pros      | Cons |
+| ----------- | ----------- |
+| Easy to implement, interpret, and efficient to train.     | Leads to overfitting if number of observations is less than the number of features       |
+| No assumptions about distributions of classes in feature space | Constructs linear boundaries |
+| Extends to multiple classes (multinomial regression)   | Assumes linearity between dependent and indepedent variables        |
+| Provides a measure of how appropriate a predictor (coefficient magnitude) is, but also its direction of association              | Non-linear problems can't be solved with logistic regression because it has a linear decision surface |
+| Good accuracy for many simple datasets as it performs well when the dataset is linearly separable              | Requires average or no multicollinearity between independent variables |
+| It can interpret model coefficients as indicators of feature importances. | Tough to obtain complex relationships. |
+| Can overfit in high-dimensional datasets, but less inclined to overfit. Can be fixed with regularization. | Independent variables should be linearly related to the log odds (log(p / (1 - p)).
+
+## How would you make a prediction using logistic regression?
+
+We are modeling the probability that and input X belongs to the default class Y = 1:
+
+$$
+P(X)=P(Y=1|X)
+$$
+
+P(X) values are given by the logistic function.
+
+$$
+P(X)=\frac{e^{\beta_0 + \beta_1X}}{1 + e^{\beta_0 + \beta_1X}}
+$$
+
+The beta_0 and beta_1 values are estimated during the training stage using maximum likelihood estimation or gradient descent. Once we have it, we can make predictions by simply putting numbers into the logistic regression equation and claculating a result.
+
+## When can logistic regression be used?
+
+Logistic regression can be used in classification problems where the output or dependent variable is categorical or binary. However, in order to implement logistic regression correctly, the dataset must also satisfy the following properties:
+
+1. There should not be a high correlation between the explanatory variables. In other words, the predictor variables should be independent of each other.
+2. There should be a linear relationship between the logit of the outcome and each predictor variable. The logit function is given as logit(p) = log(p / (1 - p)), where p is the probability of the outcome.
+3. The sample size must be large. How large depends on the number of independent variables of the model.
+
+## Why is logistic regression called regression and not classification?
+
+Logistic regression does not actually individually classify things for you: it just gives you probabilities (or log odds ratios in the logit form).
+
+## Compare SVM and logistic regression in handling outliers.
+
+- For logistic regression, outliers can have an unusually large effect on the estimate of logistic regression coefficeints. It will find a linear boundary if it exists to accomodate the outliers. To solve the problem of outliers, sometimes a sigmoid function is used in logistic regression.
+- For SVM, outliers can make the decision boundary deviate severly from the optimal hyperplane. One way for SVM to get around the problem is to introduce slack variables. There is a penalty involved with using slack variables, and how SVM handles outliers depends on how this penalty is imposed.
+
+## How is a logistic regression model trained?
+
+The logistic model is trained through the **logistic function**:
+
+$$
+P(y)=\frac{1}{1 + e^{-wx}}
+$$
+
+P(y) is the probability that the output label belogns to one class. If for some input we got P(y) > 0.5, then the predicted output is 1, and otherwise would be 0. The training is based in estimation of the w vector. For this, in each training instance, we use Stochastic Gradient Descent to clculate a prediction using some initial values of the coefficients, and then claculate new coefficient values based on the error in the previous prediction. The process is repeated for a fixed number of iterations or until the model is accurate enough or cannot be made any more accurate. 
+
+## Provide a mathematical intuition for logistic regression.
+
+Logistic regression can be seen as a transformation from linear regression using the logistic function , also known as the sigmoid function.
+
+$$
+S(x) = \frac{1}{1 + e^{-x}}
+$$
+
+Given the linear model:
+
+$$
+y=b_0 + b_1x
+$$
+
+If we apply the sigmoid function to the above equation
+
+$$
+S(y) = \frac{1}{1 + e^{-y}}=p
+$$
+
+Where p is the probability and it takes values between 0 and 1. If we now apply the logit function to p, it results in:
+
+$$
+\text{logit}(p) = \text{log}(\frac{p}{1 - p}}=b_0 + b_1x
+$$
+
+
+
 # Decision Trees
 
 ## What is the default method for splitting in decision trees?
 
 The default method is the **Gini index**, which is the measure of impurity of a particular node. Essentially, it calculates the probability of a specific feature that is classified incorrectly. When the elements are linked by a single class, we call this "pure". It is preferred because it is not computationally intensive and doesn't involve logarithm function.
-ans or kNN, why do we use Euclidean distance over Manhattan distance?
-Linear regression models are usually evaluated using Adjusted R² or an F value. How would you evaluate a logistic regression model?
-Explain the difference between the normal soft margin SVM and SVM with a linear kernel.
+
 # Random Forests
 
 # XGBoost
+
+# SVM
 
 ## Why does XGBoost perform better than SVM?
 
