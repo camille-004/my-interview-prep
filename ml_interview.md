@@ -81,7 +81,7 @@ Yes, they can. Underfitting can be overcome by utilizing ML models with greater 
 
 This does not guarantee plausible results in real life since they still may need to be based on data that have not been collected with the proper technique.
 
-## How can you identify a high bias (low variance) model?
+## How can you identify a high bias (low variance) model (usually linear models)?
 
 A high bias model is due to a simple model and can simply be identified when the model contains:
 - A high training error.
@@ -93,7 +93,7 @@ A high bias model is due to a simple model and can simply be identified when the
 - Add more complexity by introducing polynomial features.
 - Decrease the regularization term.
 
-## How can you identify a high variance (low bias) model?
+## How can you identify a high variance (low bias) model (usually non-linear models)?
 
 A high variance model is due to a complex model and can simply be identified when the model contains:
 - A low training error.
@@ -276,6 +276,16 @@ $$
 
 # Decision Trees
 
+| Pros      | Cons |
+| ----------- | ----------- |
+| Simple to understand, interpret, and visualize.     | Overfitting: keeps generating new nodes to fit the data, including noisy, making the tree complex to interpret. It is a high variance model |
+| Used for both classification and regression | Unstable: Adding new data points can lead to the regeneration of the overall tree. |
+| Handles both continuous and categorical variables   | Not suitable for large datasets (should use ensemble techniques instead) |
+| No feature scaling required | |
+| Handles nonlinear parameters efficiently. | |
+| Handles missing values and outliers automatically | |
+| Less training period than ensemble techniques | |
+
 ## What is the decision tree algorithm?
 
 A decision tree is a supervised ML algorithm that can be used for both regression and classification problem statements. It divides the complete dataset into smaller subsets while, at the same time, an  associated decision tree is incrementally developed.
@@ -311,7 +321,115 @@ The mostly widely used algorithm for building a DT is called ID3. ID3 uses entro
 1. **Entropy**: A DT is built top-down from a root node and involves the partitioning of data into homogeneous subsets. To check the homogeneity of a sample, ID3 uses entropy. Therefore, entropy is zero when the sample is completely ghomogeneous, and entropy of one when the sample is equally divided between different classes.
 2. **Information Gain**: Information Gain is based on the decrease in entropy after splitting a dataset based on an attribute. The meaning of constructing a DT is all about finding the attributes having the highest information gain.
 
+![InformationGain](information_gain.png)
+
+$$
+\text{Gain}(T, X)=\text{Entropy}(T)-\text{Entropy}(T, X)
+$$
+
+## Explain the difference between the CART and ID3 algorithms.
+
+The CART algorithm produces only binary trees: non-leaf nodes always have two childrens (questions only have yes/no answers). On the contrary, other tree algorithms can produce DTs with nodes having more than two children.
+
+## Which should be preferred among Gini impurity and Entropy?
+
+Most of the time, it does not make a big difference. Gini impurity is a good default while implementing in `sklearn` since it is slightly faster. However, when they work differently, Gini impurity tends to isolate the most frequent class in its own branch of the tree, while entropy tends to produce slightly more balanced trees.
+
+## What do you understand about Information Gain? Also, explain the mathematical formulation associated with it.
+
+Information gain is the difference between the entropy of a data sement before and after the split, i.e., reduction in impurity due to the selection of an attribute.
+
+Some points to keep in mind about information gain:
+- High difference represents high information gain.of children 
+- High difference implies the lower entropy of all data segments resulting from the split.
+- Thus, the higher the difference, the higher the information gain, and the better the feature used for the split.
+
+Mathematically: Information Gain = E(S1) - E(S2)
+- E(S1) denotes the entropy of data belonging to the node before the split.
+- E(S2) denotes the weighted summation of entropy of children nodes by considering the weights as the proporation of data instances falling in specific childern nodes.
+
+## Do we require feature scaling for decision trees?
+
+They don't require feature scaling or centering (standardization). Such models are often called **white-box models**. DTs provide simple classification rules based on if and else statements that can even be applied manually if necessary.
+
+## What are the disadvantages of information gain?
+
+Information gain is defined as the reduction in entropy due to the selection of a particular attribute. Information gain biasses the decision tree against considering attrbites with a large number of distinct values, which might lead to overftiting. The **information gain ratio** is used to solve this problem.
+
+## When are decision trees most suitable?
+- Tabular data
+- Discret outputs
+- Explanations for decisions are reuqired
+- Training data may contain errors and noisy data (outliers)
+- Training data may contain missing feature values
+
+## Explain the time and space complexity of training and testing for decision trees.
+
+Sorting the data in training takes O(nlogn) time, following which we traverse the data points to find the right threshold, which takes O(n) time. Subsequently, for d dimensions, the total complexity would be:
+
+$$
+O(n\text{log}n*d) + O(n*d)
+$$
+
+Which is asymptotically
+
+$$
+O(n\text{log}n*d)
+$$
+
+While training the DT,we identify the nodes, which are typically stored in the form of if-else statement, due to which the training space complexity is O(nodes).
+
+The testing time complexity is O(depth) as we have to traverse from the root to a leaf node in the decision tree, so the testing space complexity is O(nodes).
+
+## How does a decision tree handle missing attribute values?
+
+- Fill the missing attribute value with the most common value of that attribute.
+- Fill in the missing value by assigning a probability to each of the possible values of the attribute based on other samples.
+
+## How does a decisiion tree handle continuous features?
+
+Decision Trees handle continuous features by converting features into a threshold-based boolean feature. We use information gain to choose the threshold.
+
+## What is the inductive bias of a decision tree?
+
+The ID3 algorithm prefers shorter trees over longer trees. In decision trees, attributes with high information gain are placed close to the root and are preferred over those without. In the case of decision trees, the depth of the trees is the inductive bias. If the depth of the tree is too low, then there is too much generalization in the model.
+
+## Compare the different attribute selection measures.
+1. **Information gain**: Biased towards multivalued attributes.
+2. **Gain ratio**: Prefers unbalanced splits in which one data segment is much smaller than the other segment.
+3. **Gini index**: Biased to multivalued attributes, has difficulty when the number of classes is too large, and tends to favor tests that result in equal-sized partitions and purity in both partitions.
+
+## Is the Gini Impurity of a node lower or greater than that of its parent? Comment whether it is generally lower/greater or always lower/greater.
+
+A node's Gini impurity is generally lower than that of its parent as the CART training algorithm cost function splits each of the nodes in a way that minimizes the weighted sum of its children's Gini impurities. However, sometimes it is also possible for a node to have a higher Gini impurity than its parent.
+
+## Why do we require pruning in decision trees?
+
+After we create a DT, we observe that most of the time, the leaf nodes have very high homoegeneity, i.e., properly classified data. However, this also leads to overfitting. Moreover, if enough partitioning is not carried out, it would lead to underfitting. Hence, the major challenge is finding the optimal trees that result in the appropriate classification having acceptable accuracy. We first make the DT and use the error rates to prune the trees appropriately. Boosting can also be used to increase the accuracy of the model by combining the predictions of weak learners into a stronger learner.
+
+## Are decision trees affected by outliers?
+
+Decision trees are not sensitive to noisy data or outliers since extreme values or outliers never cause much reduction in the residual sum of squares, because they are never involved in the split. DTs are generally robust to outliers. Due to their tendency to overfit, they are prone to sampling errors. If sampled training data is someon edifferent than evaluation data, then DTs tend not tto produce great results.
+
+## What do you understand by pruning in a DT?
+
+Pruning is the process of removing sub-nodes of a decision tree, and it is the opposite process of splitting. Two types:
+
+**Post-pruning**:
+- Used after the construction of the decision tree.
+- Used when the DT has a tremedous depth and will show overfitting.
+- Also known as backward pruning.
+- Used when we have an infinitely grown decision tree.
+
+**Pre-pruning**:
+- This technique is used before the construction of the decision tree.
+- Pre-pruning done using hyperparameter tuning.
+
 # Random Forests
+
+## What is the random forest algorithm?
+
+Ensemble technique that averages several decision trees on different parts of the same training set, with the objective of overcoming overfitting of individual decision trees. It's used for both classification and regression problem statements that operate by constructing a lot of decision trees at the same time.
 
 # XGBoost
 
@@ -362,8 +480,6 @@ When the assumption of independence holds, they are easy to implement and yield 
 ## What is the exploding gradient problem when using the back-propagation technique?
 
 In a deep neural network with n hidden layers, n derivatives will be multiplied together while performing back-propagation. If the derivatives are large enough, the gradient increases exponentially as we propagate backwards in the model. This will cause accumulation of large error gradients and they eventually become large in magnitudes. This is called the problem of cexploding gradients, which makes the model unstable by making it difficult to converge to ideal weight value. We can tackle this by reducing the number of layers or by initializing the weight
-
-
 
 # Validation and Metrics
 
