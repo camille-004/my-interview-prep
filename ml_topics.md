@@ -81,6 +81,22 @@ $$
 
 MAP comes up in a Bayesian setting, since we have priors for the parameters. On the other hand, MLE is frequentist, meaning the likelihood will speak for itself. 
 
-## Bernoulli and Uniform
+## Bernoulli
 
 When there is a tossing of a coin, we think of Bernoulli's distribution. p would be the probability of the coin landing on heads or tails, respectively. The outcome of the experiment is boolean in nature.
+
+![Bernoulli](bernoulli.png)
+
+Probability mass function:
+
+$$
+f(k;p) = \begin{cases} 
+            p & k=1 \\
+            1-p & k=0
+         \end{cases}
+$$
+
+## Poisson
+
+How would you model the count of customers clicking a particular link on your website each minute? The entire number of clicks in one day are modelled by a Poisson distribution. Poisson distributions are applicable in situations where events occur at random bursts of time and space and our interest lies only in the total nnumber of occurrences of the event. Where the rate of occurrence of suome event, r, is small, the range of likely possibilities will lie near the zero line. As the rate becomes higher (occurrences of the event become more common), the cneter of the curve moves toward the right. 
+
