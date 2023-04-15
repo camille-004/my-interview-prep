@@ -119,4 +119,4 @@ Two intermediate steps:
 - **Partition**: Translates <key, value> pairs resulting from mappers to another set of <key, value> pairs to feed into the reducer. It decides how the data has to be presented to the reducer and assigns it to a particular reducer.
     - Default partitioner determines the hash value for the key, resulting from the mapper, and assigns a partition based on its hash value.
 
-[MapReduce](#mapreduce.png)
+![MapReduce](#mapreduce.png)
