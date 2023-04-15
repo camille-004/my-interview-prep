@@ -269,7 +269,7 @@ Since a matrix is a linear transformation, eigenvectors are cases whereby the re
 The decomposition of a square matrix into its eigenvectors is called an eigendecomposition. Note that while not all matrices are square, through SVD, every matrix has a decomposition:
 
 $$
-A=U\SigmaV^T
+A=U\Sigma V^T
 $$
 
 # Bias-Variance Tradeoff
