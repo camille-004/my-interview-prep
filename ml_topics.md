@@ -1,3 +1,34 @@
+# Table of Contents
+
+1. [Random Variables](#random-variables)
+2. [Probability Distributions](#probability-distributions)
+    1. [Normal](#normal)
+    2. [Bernoulli](#bernoulli)
+    3. [Poisson](#poisson)
+    4. [Binomial](#binomial)
+    5. [Exponential](#exponential)
+3. [Maximum Likelihood](#maximum-likelihood)
+    1. [Linear Regression](#linear-regression)
+    2. [Logistic Regression](#logistic-regression)
+4. [Linear Algebra](#linear-algebra)
+    1. [Eigenvalues and Eigenvectors](#eigenvalues-and-eigenvectors)
+    2. [Decomposition](#decomposition)
+5. [Bias-Variance Tradeoff](#bias-variance-tradeoff)
+6. [Linear Regression](#linear-regression)
+7. [Dimensionality Reduction](#dimensionality-reduction)
+    1. [PCA](#pca)
+8. [Classification](#classification)
+9. [Logistic Regression](#logistic-regression)
+10. [Linear Discriminant Analysis](#linear-discriminant-analysis)
+    1. [Training Decision Trees](#training-decision-trees)
+    2. [Entropy](#entropy)
+    3. [Random Forests](#random-forests)
+11. [Clustering]
+    1. [Overview of Clustering](#overview-of-clustering)
+    2. [K-Means Clustering](#k-means-clustering)
+    3. [Gaussian Mixture Model](#gaussian-mixture-model)
+    4. [Expectation Maximization](#expectation-maximization)
+
 # Random Variables
 Quantity with an associated probability distribution: discrete (probability mass function) or continuous (probability density function)
 
@@ -313,7 +344,7 @@ $$
 (y-X\beta)^T(y-X\beta)+\lambda|\beta|_2^2
 $$
 
-# Dimensionality Redduction
+# Dimensionality Reduction
 
 ## PCA
 
