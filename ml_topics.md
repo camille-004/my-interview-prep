@@ -285,7 +285,7 @@ To assess how well the model fits, we can decompose the error of y as the follow
 2. Variance (how much the prediction changes based on training inputs)
 3. Irreducible error (due to inherently noisy observation processes)
 
-There is a tradeoff between bias and variance, and this is a useful framework for thinking about how different models. The overall goal is to control overfitting.
+There is a tradeoff between bias and variance, and this is a useful framework for thinking about how different models. The overall goal is to control overfitting. The equation of the tradeoff can be expressed by: Total model error = Bias + Variance + Irreducible error
 
 # Linear Regression
 
