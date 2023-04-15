@@ -23,7 +23,7 @@
     1. [Training Decision Trees](#training-decision-trees)
     2. [Entropy](#entropy)
     3. [Random Forests](#random-forests)
-11. [Clustering]
+11. [Clustering](#clustering)
     1. [Overview of Clustering](#overview-of-clustering)
     2. [K-Means Clustering](#k-means-clustering)
     3. [Gaussian Mixture Model](#gaussian-mixture-model)
