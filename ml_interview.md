@@ -417,7 +417,7 @@ Pruning is the process of removing sub-nodes of a decision tree, and it is the o
 
 **Post-pruning**:
 - Used after the construction of the decision tree.
-- Used when the DT has a tremedous depth and will show overfitting.
+- Used when the DT has a tremendous depth and will show overfitting.
 - Also known as backward pruning.
 - Used when we have an infinitely grown decision tree.
 
