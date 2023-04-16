@@ -119,4 +119,20 @@ Two intermediate steps:
 - **Partition**: Translates <key, value> pairs resulting from mappers to another set of <key, value> pairs to feed into the reducer. It decides how the data has to be presented to the reducer and assigns it to a particular reducer.
     - Default partitioner determines the hash value for the key, resulting from the mapper, and assigns a partition based on its hash value.
 
-![MapReduce](#mapreduce.png)
+![MapReduce](mapreduce.png)
+
+## Can you explain SVM?
+
+SVM is a supervised machine learning algorithm which works on both classifiaction and regression problems. It tries to classify data by finding a hyperplane that maximizes the margin between the classes in th etraining data. Hence, SVM is an example of a large margin classfiier. The basic ideas of support vector machines:
+- Optimal hyperplane for linearly separable patterns
+- Extend to patterns that are not linearly separable by transformations of original data to map into new space (kernel trick)
+
+## How do you detect if a new observation is an outlier?
+
+1. **Standard Deviation**:
+- Check if a data point is more than three times the standard deviation. In a normal distribution, it would be greater or less than about 99.7 percent of the data.
+
+2. **Boxplots**:
+
+- The lower and upper whiskers are the boundaries of the data distribution. (Lower and upper quartiles are the edges of the box, by contrast.) The outliers will be outside the whiskers.
+
