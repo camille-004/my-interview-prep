@@ -9,6 +9,14 @@
     6. [Disease Bayes Rule](#disease-bayes-rule)
     7. [Combinations of Cards](#combinations-of-cards)
     8. [Expected Dice Rolls](#expected-dice-rolls)
+        1. [Coupon Collector Problem](#coupon-collector-problem)
+    9. [Microsoft Seattle Rain Problem](#microsoft-seattle-rain-problem)
+    10. [3 Dice in Strictly Increasing Order](#3-dice-in-strictly-increasing-order)
+    11. [Expected Coin Flips to HH](#expected-coin-flips-to-hh)
+    12. [Expected Number of Cards Before First Ace](#expected-number-of-cards-before-first-ace)
+    13. [Make a Fair Coin from a Biased Coin](#make-a-fair-coin-from-a-biased-coin)
+    14. [Sample from a Normal Distribution](#sample-from-a-normal-distribution)
+    15. [Largest Dice Roll = r](#largest-dice-roll--r)
 
 # Probability
 
@@ -139,6 +147,118 @@ $$
 
 ## Expected Dice Rolls
 **What is the expected number of rolls needed to see all 6 sides of a fair die?**
+
+This is a formulation of the *coupon collector problem*. The standard approach is to write the total waiting time as a sum of the waiting times to get "the next one". If we let $T$ be the total waiting time and $T_k$ be the waiting time to see the $k^\text{th}$ face not yet seen, then
+
+$T=\sum_{k=1}^{6} T_k$, and $E(T)=\sum_{k=1}^{6}$, by linearity of expectation. Clearly, $E(T_1)=1$, and $E(T_k)=\frac{6}{7-k}$, for $k > 1$ (each of these is a geometric random variable), So, the final answer is:
+
+$$
+1+6/5+6/4+6/3+6/2+6/1=14.7
+$$
+
+### Coupon Collector Problem
+
+Given $n$ coupons, how many coupons do you expect you need to draw with replacement before having drawn each coupon at least once?
+
+Let time $T$ be the number of draws needed to collect all $n$ coupons, and let $t_i$ be the time to collect the $i^{\text{th}}$ coupon after $i-1$ coupons have been collected. Then, $T=t_1+...+t_n$. Think of $T$ and $t_i$ as random variables. From
+
+$$
+p-i=\frac{n-(i-1)}{n}=\frac{n-i+1}{n}
+$$
+
+we see that $t_i$ has a geometric distribution with expectation $\frac{1}{p_i}=\frac{n}{n-i+1}$. By linearity of expectations, we have
+
+$$
+E(T)=E(t_1+t_2+...+t_n)=E(t_1)+E(t_2)+...+E(t_n)=\frac{1}{p_1}+\frac{1}{p_2}+...+\frac{1}{p_n}=\frac{n}{n}+\frac{n}{n-1}+...+\frac{n}{1}
+$$
+
+## Microsoft Seattle Rain Problem
+
+**Three friends in Seattle each told you it’s rainy, and each person has a 1/3 probability of lying. What is the probability that Seattle is rainy? Assume the probability of rain on any given day in Seattle is 0.25.**
+
+For Seattle to be rainy, our friends have to be telling the truth, of which there is a probability of 2/3. So, we should simply find the probability that Seattle is rainy and our friends are telling the truth.
+
+$$
+P(\text{raining} | \text{all say yes}) = \frac{P(\text{all truth}) \cdot P(\text{rain})}{P(\text{all say yes})}
+$$
+
+There are two things that can happen when all three of our friends say yes: They could all be lying (saying yes and Seattle is not rainy) or all telling the truth (saying yes and Seattle is rainy). So, the probability of each of these will be P(all say yes).
+
+$$
+P(\text{raining} | \text{all say yes}) = \frac{P(\text{all truth}) \cdot P(\text{rain})}{P(\text{all lie and Seattle is not rainy}) + P(\text{all tell the truth and Seattle is rainy})}
+$$
+
+Plug in the values:
+
+$$
+P(\text{raining} | \text{all say yes}) = \frac{(2/3)^2 \cdot 0.25}{(1/3)^2 \cdot 0.75 + (2/3)^2 \cdot 0.25} \approx 0.57
+$$
+
+## 3 Dice in Strictly Increasing Order
+**Say you roll three dice, one by one. What is the probability that you obtain 3 numbers in a strictly increasing order?**
+
+For each selection of 3 out of 6 numbers, there is exactly one way to arrange them in order, so there are ${6 \choose 3}=20$ different strictly ordered outcomes, which yields a probability of $20/6^3=5/54$
+
+## Expected Coin Flips to HH
+**What is the expected number of coin flips needed to get two consecutive heads?**
+
+Let the expected number of coin flips be $x$. Break this down into cases:
+1. If the first flip is a tails, then we have wasted a flip. The probability of event is 1/2 and the total number of flips required is $x + 1$.
+2. If the first flip is a heads and the second flip is a tails, then we have wasted two flips. The probability of this event is 1/4 and the number of flips required is $x + 2$.
+3. If the first flip is a heads and the second flip is also a heads, then we are done. The probability of this event is 1/4 and the number of flips required is 2.
+
+Adding, the equation is $x=\frac{1}{2}(x+1)+\frac{1}{4}(x+2)+\frac{1}{4}\cdot 2$.
+
+## Expected Number of Cards Before First Ace
+**How many cards would you expect to draw from a standard deck before seeing the first ace?**
+
+There are four aces, so for any card, such as a seven of clubs, the probability of that card coming before any of the aces is $1/5$. $1/5$ is the chance of picking that card out of a pile of the aces plus that card. And this will apply for all 48 non-ace cards. Thus, the average number of cards picked before any of the aces is $48 \cdot \frac{1}{5}=9.6$.
+
+## A Having More Coins than B
+**A and B are playing a game where A has n+1 coins, B has n coins, and they each flip all of their coins. What is the probability that A will have more heads than B?**
+
+Either A will have more tails or more heads than B. Both possible cases are symmetric so both will have the same probability, so the answer is 1/2.
+
+## Make a Fair Coin from a Biased Coin
+
+https://www.xarg.org/2018/01/make-a-fair-coin-from-a-biased-coin/
+
+We are going to consider the outcomes of tossing the biased coin twice. Let $p$ be the probability of the coin landing heads and $q$ be the probability of the coin landing tails, where $q = 1 - p$. Imagine, we have a coin with $p = 0.6$. If we toss the coin twice and the coin's faces are the same, the probability would be either $P(HH)=P(H)\cdot P(H)=0.36$ or $P(TT)=P(T)\cdot P(T)=0.16$, which does not reveal anything. But, if the tosses are different, the probabilities are the same, $P(HT)=0.24$ and $P(TH)=0.24$. 
+
+That means when the two tosses are different, we can use the outcome of the first coin and throw away the second. If the two tosses are the same, we disregard them and start over until we find two different tosses. Since we do not consider all cases where the outcomes are the same, it doesn't change the result. So even if we have $P(HT)=P(TH)=0.24$, it doesn't matter. The outcome has an equivalent probability, even if we have to wait for it a little longer. Procedure:
+
+1. Toss the coin twice.
+2. If the outcome of both coins is the same (HH or TT), start over and disregard the current toss.
+3. If the outcome of both coins is different (HT or TH), take the first coin as the result and forget the second (i.e., if the outcome is HT, just take H as the result).
+
+## Sample from a Normal Distribution
+
+**Say you have $N$ i.i.d. draws of a normal distribution with parameters μ and σ. What is the probability that $k$ of those draws are larger than some value $Y$?**
+
+Let $X_1,...,X_N$ be i.i.d from $N(\mu, \sigma^2)$, and let $W$ be the number of draws that are larger than $y$, thus $W \sim \text{Bin}(N, p)$, where
+
+$$
+p=P(X>y)=1-\Phi\left(\frac{y-\mu}{\sigma}\right)
+$$
+
+hence, for exactly $k$, we have
+
+$$
+P(W=k)={n \choose k}p^k(1-p)^{n - k},
+$$
+
+and for "at least $k$", 
+
+$$
+P(W \geq k)=\sum_{i=k}^{N}{N \choose i}p^i(1-p)^{n-i}
+$$
+
+## Largest Dice Roll = r
+
+**A fair die is rolled n times. What is the probability that the largest number rolled is r, for each r in 1..6?**
+
+We will forbid any number larger than $r$. That is, we forbit $6 - r$ alues. The probability that your single roll does not show any of these values is \frac{6-r}{6}, and the probability that this happens each time during a series of $n$ rolls is obviously $(\frac{6-r}{6})^n$. However, this is only the case for $\text{largest} \leq r$, but what if $\text{largest} = r$? See https://miro.medium.com/v2/resize:fit:720/format:webp/1*vrkRGgXUs-W6XRawkHFVwg.png
+
 
 
 
