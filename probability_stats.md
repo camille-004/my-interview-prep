@@ -1,6 +1,6 @@
 # Table of Contents
 
-1. [Probability](#Probability)
+1. [Probability](#probability)
     1. [Probability of Flipping an Unfair Coin](#probability-of-flipping-an-unfair-coin)
     2. [Probability of HH Before TH](#probability-of-hh-before-th)
     3. [Seven Game Probability (Negative Binomial)](#seven-game-probability)
@@ -17,6 +17,20 @@
     13. [Make a Fair Coin from a Biased Coin](#make-a-fair-coin-from-a-biased-coin)
     14. [Sample from a Normal Distribution](#sample-from-a-normal-distribution)
     15. [Largest Dice Roll = r](#largest-dice-roll--r)
+
+2. [Statistics](#statistics)
+    1. [Confidence Interval Explanation](#confidence-interval-explanation)
+    2. [Multicollinearity](#multicollinearity)
+    3. [p-Value Explanation](#p-value-explanation)
+    4. [Movie Ranking Comparison](#movie-ranking-comparison)
+    5. [Statistical Power](#statistical-power)
+    6. [A/B Testing](#ab-testing)
+    7. [Confidence Interval from Coin Tosses](#confidence-interval-from-coin-tosses)
+    8. [Uniform Distribution Mean and Variance](#uniform-distribution-mean-and-variance)
+    9. [Expected Minimum of Two Uniform Distribuitions](#expected-minimum-of-two-uniform-distribuitions)
+    10. [Sampling from a Uniform Distribution](#sampling-from-a-uniform-distribution)
+    11. [Expected Days Drawing from a Normal Distribution](#expected-days-drawing-from-a-normal-distribution)
+
 
 # Probability
 
@@ -104,7 +118,14 @@ $$
 Any two artbirary chords can be represented by four points chosen on the circle. If you choose to represent the first chord by two of the four points, then you have:
 
 $$
-{4 \choose 2} = 6
+{4 \choose 2} = 6expectation of g(X) by:
+Eg(X)=∫g(x)f(x)dx(1)
+
+You want to find the "expectation of the PDF". However, for that the PDF must be a random variable, so what you ask is absurd.
+
+It is a fact though that f(X)
+is a random variable. Applying (1) its expectation can be found as:
+∫f(x)f(x)dx=∫f(x)2dx
 $$
 
 ways of choosing two points to represent chord 1, and the other two will represent chord 2. However, we are duplicating the count of each chord twice since a chord with endpoints p1 and p2 is the same as a chord with endpoints p2 and p1. Therefore, the number of valid chords is 3.
@@ -259,7 +280,237 @@ $$
 
 We will forbid any number larger than $r$. That is, we forbit $6 - r$ alues. The probability that your single roll does not show any of these values is \frac{6-r}{6}, and the probability that this happens each time during a series of $n$ rolls is obviously $(\frac{6-r}{6})^n$. However, this is only the case for $\text{largest} \leq r$, but what if $\text{largest} = r$? See https://miro.medium.com/v2/resize:fit:720/format:webp/1*vrkRGgXUs-W6XRawkHFVwg.png
 
-
-
-
 # Statistics
+
+## Confidence Interval Explanation
+
+**How would you explain a confidence interval to a non-technical audience?**
+
+It is the range of values where any sample value is likely to fall into a certain probability. It is calculated based on some sample from the entire population. For example, we want to figure out the average height of women in the U.S. Assume someone tells you the 95% confidence interval is (5'2, 5'7), that means if we randomly pick one woman from th crowd, there is 95% chance that the height of this woman is between 5'2 and 5'7. In other wods, if we pick 100 woman from a crowd, we are confident that the height of at least 95% of them are between 5'2 and 5'7.
+
+## Multicollinearity
+
+**Say you are running a multiple linear regression and believe there are several predictors that are correlated. How will the results of the regression be affected if they are indeed correlated? How would you deal with this problem?**
+
+A concept to understand is the *variance inflation factor*. The VIF is how much larger variance of your regression coefficient is larger than it would otherwise have been if the variable had been completely uncorrelated with the other variables. The VIF is a multiplicative factor; if the variable in question is uncorrelated, the $VIF=1$. 
+
+You could fit a model predicting a variable, $Y$, from all other variables in your model, $X$, and get a multiple $R^2$. The VIG for $Y$ would be $1(1/-R^2)$. If the VIF for $Y$ were 10, then the variance of the sampling distribution of the regression coefficient for $Y$ would be 10 times larger than it would have been if $Y$ had been completely uncorrelated with all the other variables in the model. 
+
+How does this effect manifest itself in $p$-values of the regression coefficients when including only one or including both predictors in the model?
+- Because the variance of the sampling distribution of the regression coefficient would be larger (by a factor of the VIF) if it were correlated with other variables in the model, the $p$-value would be higher than they otherwise would.
+
+Note that multicollinearity affects the coefficients and $p$-values, but it does not influence the predictions, precision, and goodness-of-fit statistics. We don't need to reduce multicollinearity if our goal is to make predictions.
+
+Some other effects/warning signs:
+- A coefficient is not significant even though, theoretically, that variable should be highly correlated with $Y$
+- When you add or delete a predictor, the regression coefficients change dramatically
+
+Some other ways we can solve it:
+- If we have two ore more factors with a high VIF, we could remove one from the model, because they supply redundant information.
+- We could use partial least squares regression or PCA to cut the number of predicotrs to a smaller set of uncorrelated components.
+
+## p-Value Explanation
+**Describe $p$-values in layman's terms.**
+
+It is the probability of obtaining given results if the null hypothesis is correct. To reject it, the $p$-value must be lower than a predetermined significant level $\alpha$. It is the calculated probability of making a Type I error (false positive).
+
+## Movie Ranking Comparison 
+**How would you build and test a metric to compare two user’s ranked lists of movie/TV show preferences?**
+
+Use Spearman's rho (or other etsts that work with rankings) to assess dependence/congruence between 2 people's rankings. To find shows/movies to include in the measuremnt instrument, maybe do cluster analysis on a large number of viewer's viewing habits.
+
+$$
+\rho = 1 - \frac{6\sum_i d_i^2}{n(n^2-1)}
+$$
+
+A value of +1 means a perfect assocation between the rankings, and a value of -1 means a perfect negative association.
+
+## Statistical Power
+**Explain the statistical background behind power.**
+
+The statistical power of a hypothesis is the probability that the test correctly rejects the null hypothesis, that is, the probability of a true positive result. Thus, it is only useful when the null hypothesis is rejected. The higher the statistical power for a given experiment, the lower the probability of making a Type II (false negative) error. That is, the higher the probability of detecting an effect when there is an effect.
+
+$$
+\text{Power}=1-\text{Type II Error}
+$$
+
+- **Low statistical power**: Large risk of committing Type II errors, e.g., false negative
+- **High statistical power**: Small risk of committing Type II errors
+
+## A/B Testing
+
+**Describe A/B testing. What are some common pitfalls?**
+
+A/B testing is essentially an experiment where two or more variants of a page are shown to users at random, and statistical analysis is used to determine which variation performs better for a given conversion goal.
+
+The underlying statistical support for A/B tests is called hypothesis testing: we try to attribute the difference in the metric, if any, to the presence of the treatment instead of random noise.
+
+_Power Analysis_ - Don't underestimate power analysis and end the experiment prematurely.
+- Insufficient sample size
+- Ending prematurely, mistake of rolling out an A/B test and immediately ending the experiment after seeing a better metric in the treatment group.
+- Sample size depends on three parameters
+    - Significance level, probability of false positive.
+    - Statistical power, probability of identifying the effect when there is indeed an effect
+    - The Minimum Affect. What is the smallest acceptable difference between treatment and control groups?
+
+_Randomization_ - Companies can't guarantee the consistent cluster assignment and thus not a truly random process. A random assignment fails to distribute heavy users equally.
+- Ensuring random assignment in the industry is easier said than done. To administer randomization, companies use hashing an a "cluster" system to randomly assign users into the treatment and control groups. Create a hashing value for each visitor and assign him/her directly to the treatment condition or through a "cluster" that is exposed to the treatment condition.
+- Can't guarantee the consistent assignment of users to the same treatment condition,
+    - If a user visits a website multiple times a day, he may be exposed to both the treatment and control conditions, invalidating any causal conclusions.
+- Adopt the "cluster" system, and randomize at the cluster level, not the user level. 
+- After conducting a power analysis, we need 1,000 samples for each variant, for example. Within the target population, heavy users roughly take up 5% but contribute to 60% of website traffic. Particularly, when the sample size is relatively small, a random assignment may result in more heavy users falling in one group over the other.
+    - Set a threshold for heavy users and use a dummy variable to randomly assign them to the treatment and control groups. The heavy vs. light users ratio balance out in the experimental groups. 
+
+3. _Source of Contamination_ - Is the _Ceteris Paribus_ assumption valid? That is, it's likely to introduce additional variations in one experiment group but not the other.
+- Microsoft case study: Following the same A/B test logic, they administer the treatment condition to one group, not to the other. However, the treatment condition needs to run JavaScript to load its content, which creates a response delay that affects the outcome variable. No delay in the control group.
+- If we fail to check the Ceteris Paribus assumptions, the difference between the treatment and control group is attributable to the true treatment effect and the extra response delay. `The overall difference = the true treatment effect + the delay effect` Economically speaking, companies lose out in the competition due ot the delay effect in the treatment group and not being able to identify the actual effect.
+- The solution is to do the balance check before, at, and after the assignment. If the intervention introduces extra delay, we should introduce the same amount of delay time to the control group. 
+- We also have to check the _spillover effect_ between experimental groups. Does our treeatment group interact with the control.
+    - To address the _cross-contamination_ effect, we would look at space and time dimensions. Spatially, a standard way is to administer the administer the randomization process at a macro level (i.e., city) instead of an individual level (i.e., Uber driver) and pick two geographically remote cases.'
+    - Time dimension: Administer one version to the entire population Week 1 and check if metric decreases or increases, then take the treatment away and re-record the metric in Week 2. The downside is it is difficult to give a precise estimate due to the lingering effects from past week.
+
+4. _Post-Experiment Analysis_ - A pitfall is getting fouled by false positive while making multiple comparison.
+- We can divide the alpha level by the number of comparison, and check for statistical significance at the divided level. 
+- _Simpson's paradox_: For an experiment, Microsoft adopts a 99% control to 1% treatment ratio and observes a higher conversion rate in the treatment group on day 1. They bump the ratio to 50% vs 50% and observe a higher conversion in the treatment group on day 2. On day 1 and day 2, the treatment group performs better. Surprisingly, the pattern reverses at the aggregated level: the control group has a higher conversion rate (1.68%). A pitfall is that individual and aggregated patterns look different for ramp-up experiments. Solutions:
+    - Paired $t$-tests on data when th proportions are stable, i.e., comparing the treatment in day 1 to the control in day 1 and the treatment in day 2 to the control in day 2.
+    - Use weighted sum to adjust for different ratios of day 1 and 2
+    - Throw away the data fr the ramp-up period, which is shorter relative to the experiment
+- _Primacy and Novelty Effects_: Primacy effect refers to the experienced users adjustment to the new version. If a new version is very different, the useres might get confused and click the link out of cuiosity. Novelty effect is existing users wanting to try out all new functions, leading to an increase in the metrics.
+    - The best way of teasing out both effects is to resort to new users who have not been exposed to the old version
+
+Overall list of pitfalls:
+- Don't understand power analysis and end the experiment prematurely.
+- Companies can't guarantee the consistent cluster assignment and thus not a truly random process.
+- A random assignment fails to distribute heavy users equally.
+- Fail to check the ceteris paribus assumpton.
+- Cross-contamination between treatment and control groups.
+- Get fouled by false positives while making multiple comparisons
+- Individual and aggregated patterns look different for ramp-up experiments
+- Fail to check the primacy and novelty effects, biasing the treatment effect
+
+## Confidence Interval from Coin Tosses
+
+**How would you derive a confidence interval from a series of coin tosses?**
+
+It's the binomial distribution. Considering $n$ tosses, with the probability of successes in each toss $p$. The mean is $np$.  The standard error is $\frac{\sqrt{np\cdot (1-p)}}{\sqrt{n}}$. 
+
+$$
+CI=\[\text{Mean}-Z_c\cdot \text{SEM}, \text{Mean}+Z_c\cdot \text{SEM}\]
+$$
+
+$Z_c$ is the critical value corresponding to the confidence level. $Z_c=1.96$ for 95% CI.
+
+## Uniform Distribution Mean and Variance
+
+**Derive the mean and variance of the uniform distribution $U(a, b)$.**
+
+For $X \sim U(a,b)$, we have
+
+$$
+f_X(x)=\frac{1}{b-a}
+$$
+
+Therefore, we can calculate the mean as,
+
+$$
+E\[X\]=\int_a^bxf_X(x)dx=\int_a^b\frac{x}{b-a}dx=\frac{x^2}{2(b-a)}\Biggr|_{a}^{b}=\frac{a+b}{2}
+$$
+
+For the variance, we want
+
+$$
+Var(X)=E\[X^2\]-E\[X\]^2
+$$
+
+And we have:
+
+$$
+E\[X^2\]=\int_a^b x^2f_X(x)dx=\int_a^b\frac{x^2}{b-a}dx=\frac{x^3}{3(b-a)}\Biggr|_{a}^{b}=\frac{a^2+ab+b^2}{3}
+$$
+
+Therefore,
+
+$$
+Var(X)=\frac{a^2+ab+b^2}{3}-\left(\frac{a+b}{2}\right)^2=\frac{(b-a)^2}{12}
+$$
+
+## Expected Minimum of Two Uniform Distribuitions
+
+**Say we have $X \sim U(0, 1)$ and $Y \sim U(0, 1)$. What is the expected value of the minimum of $X$ and $Y$?**
+
+The question is to find the expected value of the minimum value of the joint probability of the random variable. Let $Z$ be the minimum value of $X$, $Y$, so $Z=\text{min(X,Y)}$. To find the expected value of $Z$, we need the PDF of $Z$.
+
+$$
+P(Z \leq z) = P(X \leq z, Y \leq z) = 1 - P(X > z, Y > z)
+$$
+
+Since $X \sim U(0, 1)$ and $Y \sim U(0, 1)$,
+
+$$
+P(X > z) = 1 - z, P(Y > z) = 1 - z
+$$
+
+Also, $X$ and $Y$ are i.i.d., thus
+
+$$
+P(X > z, Y > z) = P(X > z) \cdot P(Y > z) = (1 - z) \cdot (1 - z) = (1 - z)^2
+$$
+
+Then, we get $P(Z \leq z)$ as
+
+$$
+F_Z = P(Z \leq z) = 1 - (1 - z)^2
+$$
+
+$F_Z$ is the CDF of $Z$. Now, to find the PDF of $Z$, we need to differentiate the CDF of $Z$ with respect to $z$. Thus,
+
+$$
+P_Z = \frac{d(F_Z)}{dz} = 2(1 - z)
+$$
+
+This is the PDF of the random variable $Z$. Now, to find the expected value of $Z$, which is also distributed as standard uniform, we integrate the PDF.
+
+$$
+E\[Z\] = \int_0^1 zP_Zdz = 2\int_0^1 z(1 - z)dz = 2\left(\frac{1}{2}-\frac{1}{3}\right)=\frac{1}{3}
+$$
+
+Therefore, the expected value of the minimum of $X$ and $Y$ is \frac{1}{3}.
+
+_Main ideas_: 
+- The expected value from the PDF is:
+
+$$
+E\[X\] = \int xf(x)dx
+$$
+
+- The PDF is simply the derivative of the CDF. 
+
+## Sampling from a Uniform Distribution
+
+**You sample from a uniform distribution $\[0, d\]$ $n$ times. What is your best estimate of $d$?**
+
+Suppose we have i.i.d. draws $X_1,X_2,...,X_n$ from $U\[0, d\]$. We could use maximum likelihood estimation, since we are estimating a parameter. If we use MLE, we would get $\text{max}(X_1,X_2,...,X_n)$
+
+The likelihood function takes valuse 0 at the values of $d$ when there is an observation in the dataset that is impossible to come from $U\[0,d\]$, and that will be the case when some observation is higher than $d$, or equivalently $\text{max}_i x_i>d$. On the other hand, for values of $d > \text{max}_i x_i$, the likelihood function is falling in $d$, so the likelihood function is maximized at
+
+$$
+\hat{d}=\text{max}(x_1,x_2,...,x_n)
+$$
+
+This estimation is consistent, but not unbiased.
+
+## Expected Days Drawing from a Normal Distribution
+
+**You are drawing from a normally distributed random variable $X \sim N(0, 1)$ once a day. What is the approximate expected number of days until you get a value of more than 2?**
+
+The probability of interest for a single day is
+
+$$
+\theta = P(X_i>2)=1-\Phi (2) \approx 0.0228
+$$
+
+Let $Y=\text{min}(n \in \mathbb{N} | X_n > 2)$ be the first day where we draw a value greater than two, this random variable has a geometric distribution $Y \sim \text{Geom}(\theta)$. The expected number of days until we draw a value greater than two is:
+
+$$
+E\[Y\]=\frac{1}{\theta}\approx 43.956
+$$
