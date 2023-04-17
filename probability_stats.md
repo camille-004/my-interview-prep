@@ -1,5 +1,7 @@
 # Table of Contents
 
+**Helpful cheatsheet**: https://static1.squarespace.com/static/54bf3241e4b0f0d81bf7ff36/t/55e9494fe4b011aed10e48e5/1441352015658/probability_cheatsheet.pdf
+
 1. [Probability](#probability)
     1. [Probability of Flipping an Unfair Coin](#probability-of-flipping-an-unfair-coin)
     2. [Probability of HH Before TH](#probability-of-hh-before-th)
@@ -30,7 +32,11 @@
     9. [Expected Minimum of Two Uniform Distribuitions](#expected-minimum-of-two-uniform-distribuitions)
     10. [Sampling from a Uniform Distribution](#sampling-from-a-uniform-distribution)
     11. [Expected Days Drawing from a Normal Distribution](#expected-days-drawing-from-a-normal-distribution)
-
+    12. [Biased Coin if 560/1000 Heads](#biased-coin-if-5601000-heads)
+    13. [Difference Between MLE and MAP](#difference-between-mle-and-map)
+    14. [Combined Mean and SD of Subsets](#combined-mean-and-sd-of-subsets)
+    15. [Uniform Sampling from a Circle](#uniform-sampling-from-a-circle)
+    16. [Normal Sample from Bernoulli Trials](#normal-sample-from-bernoulli-trials)
 
 # Probability
 
@@ -118,14 +124,7 @@ $$
 Any two artbirary chords can be represented by four points chosen on the circle. If you choose to represent the first chord by two of the four points, then you have:
 
 $$
-{4 \choose 2} = 6expectation of g(X) by:
-Eg(X)=∫g(x)f(x)dx(1)
-
-You want to find the "expectation of the PDF". However, for that the PDF must be a random variable, so what you ask is absurd.
-
-It is a fact though that f(X)
-is a random variable. Applying (1) its expectation can be found as:
-∫f(x)f(x)dx=∫f(x)2dx
+{4 \choose 2} = 6
 $$
 
 ways of choosing two points to represent chord 1, and the other two will represent chord 2. However, we are duplicating the count of each chord twice since a chord with endpoints p1 and p2 is the same as a chord with endpoints p2 and p1. Therefore, the number of valid chords is 3.
@@ -137,6 +136,7 @@ p = \frac{1}{3}
 $$
 
 ## Disease Bayes Rule
+
 **1/1000 people have a particular disease, and there is a test that is 98% correct if you have the disease. If you don’t have the disease, there is a 1% error rate. If someone tests positive, what are the odds they have the disease?**
 
 Let $A$ be the event a person has the disease, and $B$ be the event of getting a positive test. We want to find $P(A|B)$.
@@ -513,4 +513,126 @@ Let $Y=\text{min}(n \in \mathbb{N} | X_n > 2)$ be the first day where we draw a 
 
 $$
 E\[Y\]=\frac{1}{\theta}\approx 43.956
+$$
+
+## Biased Coin if 560/1000 Heads
+
+**A coin was flipped 1000 times, and 560 times it showed up heads. Do you think the coin is biased? Why or why not?**
+
+With a large number of independent Bernoulli trials, the sample proportion has an approximate normal distribution by the CLT. With $p=0.56$ and $SE(p)=\sqrt{\frac{p(1-p)}{1000}}\approx 0.015$, the sample test statistics for the proportion test of the hypothesis of the hypothesis $p=0.5$ corresponding to the fair coin is $Z \approx (0.56 - 0.50) / 0.015 \approx 4$. Using the normal approximation to the sampling distribution of the test statistic under the null hypothesis, the probability of observing 550 or more is less than 0.001, which is very strong evidence the coin is biased.
+
+Using the $Z$-test here. Determines whether two population means are different when the variances are known and the sample size is large.
+
+$$
+Z=\frac{\overline{X}-\mu_0}{s}
+$$
+
+## Difference Between MLE and MAP
+
+**What is the difference between MLE and MAP? Describe it mathematically.**
+
+Let's say we have a likelihood function $P(X|\theta)$. Then, the MLE for $\theta$, the parameter we want to infer, is:
+
+$$
+\theta_{\text{MLE}} = \text{argmax}_{\theta}P(X|\theta)=\text{argmax}_{\theta}\prod_i P(x_i|\theta)
+$$
+
+Of course, take the log instead, as the logarithm is monotonically increasing, so miaximizing a functon is equal to maximizing the log of that function.
+
+$$
+\begin{align}
+\theta_{\text{MLE}}=\text{argmax}_{\theta}\text{log}P(X|\theta) \\
+=\text{argmax}_{\theta}\text{log}\prod_i P(x_i|\theta) \\
+=\text{argmax}_{\theta}\sum_i \text{log} P(x_i|\theta)
+\end{align}
+$$
+
+Now, for MAP, we are working in a Bayesian setting:
+
+$$
+P(\theta | X) = \frac{P(X | \theta)P(\theta)}{P(X)} \propto P(X|\theta)P(\theta)
+$$
+
+If we replace the likelihood in the MLE formula above with the posterior, we can get
+
+$$
+\begin{align}
+\theta_{\text{MAP}} = \text{argmax}_{\theta}P(X|\theta)P(\theta) \\
+= \text{argmax}_{\theta} \text{log}P(X|\theta)+\text{log}P(\theta) \\
+= \text{argmax}_{\theta} \text{log}\prod_i P(x_i | \theta) + \text{log}P(\theta) \\
+= \text{argmax}_{\theta} \sum_i \text{log} P(x_i | \theta) + \text{log}P(\theta)
+\end{align}
+$$
+
+The only difference is the inclusion of the prior. Note that if we were to make the prior constant in the MAP equations, we would get the MLE equatio again.
+
+## Combined Mean and SD of Subsets
+**Say you have two subsets of a dataset for which you know their means and standard deviations. How do you calculate the blended mean and standard deviation of the total dataset? Can you extend it to $K$ subsets?**
+
+If the first subset has $n_1$ and the second has $n_2$ elements, we can add them together to get $N$ elements total.
+
+$$
+\text{Sum}=n_1\cdot \text{mean}_1 + n_2\cdot \text{mean}_2
+$$
+
+The combined mean is: $\text{Sum} / N$. The sum of squares is:
+
+$$
+SS = n_1 \cdot (SD_1^2 + \text{mean}_1^2) + n_2 \cdot (SD_2^2 + \text{mean}_2^2)
+$$
+
+So, the combined standard deviation is
+
+$$
+\sqrt{\frac{SS}{N - \text{mean}^2}}
+$$
+
+Yes, this can be extended to $K$ subsets. (?)
+
+## Uniform Sampling from a Circle
+
+**How do you randomly sample a point uniformly from a circle with radius 1?**
+
+The first idea that comes to mind: utilize random number generator to get random angle between 0 and $2\pi$ to set angular position of a point and utilize another instance of the random generator to get the random distance of the point from the origin of the circle.
+
+However, following this strategy, the distribution will be more dense around hte origin. This is because as the distance from the origin increases then the area covered by the circular segments increases for fixed discretization size along the radius. 
+
+If a circle has a radius $d$ and has area $A$, then, working out the math, a circle with $2d$ radius will have an area of $3A$. The area and density of points in a circular ring is inversely proportional, so the probability distribution of the distance from the origin should be linearly increasing between 0 and $R$ to compensate for the reduction in density. For the rest of the solution, see
+
+https://meyavuz.wordpress.com/2018/11/15/generate-uniform-random-points-within-a-circle/
+
+## Normal Sample from Bernoulli Trials
+
+**Given a random Bernoulli trial generator, how do you return a value sampled from a normal distribution?**
+
+Assume we have $n$ Bernoulli trials each with success probability of $p$: $x_1,x_3,...,x_n,x_i \sim Ber(p)$.
+
+Assuming i.i.d. trials, we can compute the sample mean for $p$ from a large number of trials:
+
+$$
+\hat{\mu}=\frac{1}{n}\sum_{i=1}^{n}x_i
+$$
+
+We know the expectation of this sample mean is:
+
+$$
+E \[\hat{\mu}\]=\frac{np}{n}=p
+$$
+
+Additionally, we can compute the variance of this sample mean:
+
+$$
+Var(\hat{\mu}) = \frac{np(1-p)}{n^2} = \frac{p(1-p)}{n}
+$$
+
+Assume we sample a large $n$. Due to the CLT, our sample mean will be normally distributed:
+
+$$
+\hat{\mu} \sim N \left(p, \frac{p(1-p)}{n} \right)
+$$
+
+Therefore, we can take a z-score of our sample mean as:
+
+$$
+z({\hat{\mu}})=\frac{\hat{\mu}-p}{\sqrt{\frac{p(1-p)}{n}}}
 $$
