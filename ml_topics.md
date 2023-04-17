@@ -7,6 +7,7 @@
     3. [Poisson](#poisson)
     4. [Binomial](#binomial)
     5. [Exponential](#exponential)
+    6. [Geometric](#geometric)
 3. [Maximum Likelihood](#maximum-likelihood)
     1. [Linear Regression](#linear-regression)
     2. [Logistic Regression](#logistic-regression)
@@ -166,7 +167,7 @@ $$
 
 ## Exponential
 
-There is a srtong relationship between the Poisson distribution and the exponential distribution. For example, let's say a Poisson distribution models the number file requests on a server in a day. The time in between each file request can be modeled with an exponential dsitribution. The exponential distribution is mostly used for testing product reliability. Poisson's "How many events per time?" in an experiment relates to the exponential's "How long until an event?". 
+There is a strong relationship between the Poisson distribution and the exponential distribution. For example, let's say a Poisson distribution models the number file requests on a server in a day. The time in between each file request can be modeled with an exponential dsitribution. The exponential distribution is mostly used for testing product reliability. Poisson's "How many events per time?" in an experiment relates to the exponential's "How long until an event?". 
 
 **PDF**:
 
@@ -187,6 +188,38 @@ F(x;\lambda) = \begin{cases}
 $$
 
 **MLE derivation**: https://math.stackexchange.com/questions/101481/calculating-maximum-likelihood-estimation-of-the-exponential-distribution-and-pr
+
+## Geometric
+
+The geometric distribution models the probabiliies for the first success occurring on the $X^{\text{th}}$ trial. However, your data must meet the following requirements for the following distribution to be appropriate:
+- **Your data must be binary**: For example, infected or uninfected, 6 or not 6, pass or fail, etc.
+- **Independent trials**: One trial's result does not affect the next trial. For example, a coin toss does not affect the following coin toss.
+- **The probability remains constant over time**.
+
+Difference from binomial: Binomial has a fixed number of trials before the experiment begins and $X$ counts the number of successes obtained in that fixed numebr. Geometric has a fixed number of successes and counts the number of trials needed to obtain the first success.
+
+**PMF**: 
+
+$$
+P(X=x)=(1-p)^{x-1}p
+$$
+
+**CDF**:
+
+$$
+P(X\leq x)=1-(1-p)^x
+$$
+
+**Expected value and variance**:
+
+$$
+E\[X\]=\frac{1}{p},Var(X)=\frac{1-p){p^2}
+$$
+$$
+
+Typically, we use the geometric distributio when we have Bernoulli trials. These trials satisfy the binomial distribution assumptions. 
+
+**MLE derivaion**: https://www.projectrhea.org/rhea/index.php/MLE_Examples:_Exponential_and_Geometric_Distributions_Old_Kiwi
 
 # Maximum Likelihood
 
