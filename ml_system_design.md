@@ -7,6 +7,22 @@
     2. [Considerations in a Large-Scale System](#considerations-in-a-large-scale-system)
     3. [Training Data Collection Strategies](#training-data-collection-strategies)
         1. [User's interaction with pre-existing system (online)](#users-interaction-with-pre-existing-system-online)
+        2. [Human labelers (offline)](#human-labelers-offline)
+        3. [Train, test, & validation splits](#train-test--validation-splits)
+        4. [Training Data Filtering](#training-data-filtering)
+    4. [Online Experimentation](#online-experimentation)
+        1. [Running an Online Experiment](#running-an-online-experiment)
+        2. [Measuring results and computing statistical significance](#measuring-results-and-computing-statistical-significance)
+        3. [Long-term effects: Back testing and long-running A/B tests](#long-term-effects-back-testing-and-long-running-ab-tests)
+    5. [Embeddings](#embeddings)
+        1. [Text Embeddings](#text-embeddings)
+            1. [Word2Vec](#word2vec)
+            2. [Context-Based Embeddings](#context-based-embeddings)
+        2. [Visual Embeddings](#visual-embeddings)
+            1. [Auto-Encoders](#auto-encoders)
+            2. [Visual supervised learning tasks](#visual-supervised-learning-tasks)
+        3. [Learning embeddings for a particular learning task](#learning-embeddings-for-a-particular-learning-task)
+        4. [Network/Relationship-based Embedding](#networkrelationship-based-embedding)
 
 # General System Design
 
@@ -195,3 +211,18 @@ Systems usually have multiple entities that interact with each other. These woul
 - Have an embedding model that projects these documents in the same embedding space can help in retrieval and ranking of tasks for recommendation, search, feed, etc.
 - Can generate embeddings for both of the above pairs of entities in the same space by creating a two-tower neural network model that encodes each item using their raw features.
     - Optimize the inner product loss such that positive pairs from interactions have a higher score and random pairs have a lower score.
+
+## Transfer Learning
+
+### Motivation
+
+1. **Growth in the ML community and knowledge sharing**: Strong desire to share state-of-the-art-models and datasets in the community.
+2. **Common sub-problems**: For example, in all visual understanding nad prediction areas, tasks such as finding edges, boundaries, and background are common sub-problems. In text domain, semantic understanding of textual terms can be helpful in almost all problems where the user is represented by text terms (recommendation, search, ads)
+3. **Limited supervised learning data and training resources**
+    - Limited amount of training data available for models to generalize well. In transfer learning, we have the ability to start learning from pre-trained models, so we can utilize the knowledge from similar domains
+    - Self-supervised learning models utilize massive available datasets for text and image representation, Word2Vec embedding models don't need any manual labels and can use books and Wikipedia data to build a semantic understanding
+    - Transfer learning optimizes training resources. Google can train a BERT model on billions of examples with massive computing power, but others are going to find it challenging to train similar optimized models. Don't have to reinvest those resources, instead plug in the output of the BERT model and use it as sub-model in training process
+
+### Techniques
+- **Extract features from useful layers**. Keep the initial layers of the pre-trained model and remove the final layers. Add the new layer to keep the remaining chunk and train them for final classification.
+- **Fine-tuning**. Change or tune existing parameters in a pre-trained network, optimizing the model parameters during training for supervised prediction task. See how many layers can we freeze and how many final layers we want to fine-tune, requires understanding of the model architecture.
