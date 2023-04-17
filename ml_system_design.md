@@ -2,7 +2,7 @@
 
 # Table of Contents
 
-1. [General System Design](#general-system-design)
+1. [Practical ML Techniques](#practical-ml-techniques)
     1. [Performance and Capacity Consideration](#performance-and-capacity-consideration)
     2. [Considerations in a Large-Scale System](#considerations-in-a-large-scale-system)
     3. [Training Data Collection Strategies](#training-data-collection-strategies)
@@ -23,8 +23,14 @@
             2. [Visual supervised learning tasks](#visual-supervised-learning-tasks)
         3. [Learning embeddings for a particular learning task](#learning-embeddings-for-a-particular-learning-task)
         4. [Network/Relationship-based Embedding](#networkrelationship-based-embedding)
+    6. [Transfer Learning](#transfer-learning)
+        1. [Motivation](#motivation)
+        2. [Techniques](#techniques)
+        3. [Applications](#applications)
+            1. [Computer Vision](#computer-vision)
+            2. [NLP](#nlp)
 
-# General System Design
+# Practical ML Techniques
 
 ## Performance and Capacity Consideration
 
@@ -226,3 +232,33 @@ Systems usually have multiple entities that interact with each other. These woul
 ### Techniques
 - **Extract features from useful layers**. Keep the initial layers of the pre-trained model and remove the final layers. Add the new layer to keep the remaining chunk and train them for final classification.
 - **Fine-tuning**. Change or tune existing parameters in a pre-trained network, optimizing the model parameters during training for supervised prediction task. See how many layers can we freeze and how many final layers we want to fine-tune, requires understanding of the model architecture.
+
+Techniques depend on a couple factors:
+1. **Size of our supervised training dataset**
+    - *Limited training data*: Either freeze all layers and using the pret-trained model for feature generation, or fine-tuning only the final layers.
+    - *Plenty of training data*: More ideas to play around with. Start with just freeing the model, fine-tuning only final layers, or we can retrain the whole model to adjust the weights for our specialized task.
+2. **Similarity of prediction tasks**
+    - If we built a classifier for cars and now we want to use it for trucks, there is a good chance that many of the features are going to be common and we don't have to fine-tune much. We can utilize the pre-trained model as it is and build our models on top of it.
+
+### Applications
+
+#### Computer Vision
+
+**Example**: Classifier for medical imaging data, 100k manual labelled examples. We can pick one pre-trained ImageNet classifier and start building on top of it. Hierarchy of a trained convolutional network:
+- Filters of first layer often detect edges or blocks of color
+- Second can detect features like shape
+
+**Case 1: Fine-tuning a few layers**
+If our prediction task is similar, there will be similar higher-level features or layers output. Therefore, we can *freeze the weight of most of the starting layers* of the pre-trained model and fine-tune only the end layers. We would finetune only the end FC + ReLU layers
+
+**Case 2: Fine-tuning more layers**
+If we have a significant amount of labelled examples and our learning tasks have commonalities but few differences as well, it would make sense to go deeper in finetuning our pre-trained model. We will *freeze the weights of the first few layers* and fine-tune the weights of the remaining end layers to optimize the model for our new learning task on medical image dataset.
+
+**Case 3: Fine-tuning the entire model**
+If the new dataset is larger, then we load the weights of the pre-trained model and *fine-tune the entire network*. This will increase our training time but should help us optimize our learning task when we have significant training data.
+
+#### NLP
+
+Need to generate the *dense representation* of textual terms. A few of the popular term representation models that use a self-supervised learning approach, trained on massive datasets are Word2Vec, BERT, and ELMO. The term representation based on hese models capture their semantic meanings. Hence, we can transfer knowledge from this learned task in many of the NLP tasks.
+
+We can utilize these embeddings in a NER classifier, spam detector classifier, search ranking, language understanding, etc., and can improve the quality of these ML models.
