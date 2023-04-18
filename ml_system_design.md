@@ -55,6 +55,24 @@
         2. [Relevance Scoring Scheme](#relevance-scoring-scheme)
             1. [Terms Match](#terms-match)
     5. [Feature Engineering](#feature-engineering)
+        1. [Searcher-Specific Features](#searcher-specific-features)
+        2. [Query-Specific Features](#query-specific-features)
+        3. [Document-Specific Features](#document-specific-features)
+        4. [Context-Specific Features](#context-specific-features)
+        5. [Searcher-Document Features](#searcher-document-features)
+        6. [Query-Document Features](#query-document-features)
+    6. [Training Data Generation](#training-data-generation)
+        1. [Pointwise Approach](#pointwise-approach)
+            1. [Positive and Negative Training Examples](#positive-and-negative-training-examples)
+            2. [Caveat](#caveat)
+        2. [Pairwise Approach](#pairwise-approach)
+    7. [Ranking](#ranking)
+        1. [Stage 1](#stage-1)
+        2. [Stage 2](#stage-2)
+            1. [LambdaMART](#lambdamart)
+            2. [LambdaRank](#lambdarank)
+    8. [Filtering Results](#filtering-results)
+        
 
 ## Performance and Capacity Consideration
 
@@ -511,3 +529,104 @@ Consider both the searcher and the document
 **Text match**
 - In *title* and *metadata* or *content* of document
 
+![TextMatch](text_match.png)
+
+- Unigrams, bigrams, trigrams
+- Matched based on **TF-IDF score** for each query term and their occurrences in documents as well
+
+**Query-document historical engagement**
+Prior engagement data
+- **Click rate**: Across queries on "Paris tourism", click rate for "Eiffel tower website" is highest
+
+**Embeddings**
+- Generate vectors in manner that if document is on same topic as query, vector will be similar to query's vector
+- Feature would be "embedding similarity score", sort by this (in descending order) for ranking
+
+## Training Data Generation
+
+### Pointwise Approach
+> We have relevance scores for each document. Loss function looks at score of one document at a time. Predicts the relevance of each document for a query, _individually_.
+
+- Use _classification algorithms_ when score of each document takes a small, finite number of values
+- Maybe binary classification if options "relevant" and "irrelevant", assume this
+
+#### Positive and Negative Training Examples
+
+Label our data as positive/negative or relevant/irrelevant, keeping in mind the **successful session rate**
+
+**Example**
+Searching for "Paris tourism", results:
+1. `Paris.com`
+2. `Eiffeltower.com`
+3. `Louvremuseum.com`
+
+- User ignores `Paris.com` $\rightarrow$ enter it in row as negative training example
+- User performs sign-up on `Eiffeltower.com` $\rightarrow$ positive training example
+- Searcher spends 20 seconds on `Louvremuseum.com` $\rightarrow$ positive training example
+
+#### Caveat
+
+- Users can only engage with first result in SERP, so less negative examples
+- _Remedy_: Use _random negative samples_, like from 50th page of Google search
+- 5 million queries per day, 2 new rows per query (one negative and one positive) $\rightarrow$ 10 million training examples per day
+- User engagement patterns differ throughout week $\rightarrow$ use week's queries to capture all patterns $\rightarrow$ 70 million rows for one week
+
+- For **train-test split**: Since we are predicting future, use data generated from first and second weeks of July for training and third week for validation/testing
+
+### Pairwise Approach
+> Use score of $document pairs$ instead of score of single document. Model can learn to rank documents according to their relative order which is closer to the nature of ranking. Model will penalize wrong order
+
+Two approaches:
+1. Use of human raters
+2. Use of online user engagement (i.e., sign-up would be rated "perfect relevance", spending 20 seconds would be a rating of "good" for that website)
+
+## Ranking
+
+**Objective**: Build a model that will display the most relevant results for a searcher's query.
+- Extra emphasis to relevance of top few results since user generally focuses on them more on SERP
+
+- Employ **stage-wise approach**
+    - Stage 1: Focus on **recall** of top documents (simpler model, larger amount of documents, say 100,000)
+    - Stage 2: Focus on **precision** of top documents (more complex model, top 500)
+
+### Stage 1
+
+- Ensures highly relevant documents forwarded to Stage 2
+- Use **pointwise approach**, approximate with binary classification
+
+#### Logistic Regression
+
+- Less complex linear algorithm, suited for scoring large set of documents
+- Can be done quickly (microseconds or less)
+- Look at **AUROC** - Likelihood of your model distinguishing observations from two classes. 
+    - In other words, if you select one observation from each class, what's the probability that your model will "rank" them correctly? Remember that AUROC is a ranking statistic.
+
+### Stage 2
+
+- Find optimized ranked order
+- Change objective function from pointwise to pairwise
+    - NOT minimizing classification error, rather getting as many pairs of documents in the right order as possible
+- **Pairwise learning algorithms**:
+
+#### LambdaMART
+
+- Variation of MART
+- Tree-based algorithms generalize effectly using moderate set of training data
+- One of best options if we optimize for offline NDCG (based on human-rated data), and training data limited to few million examples
+
+#### LambdaRank
+
+- Neural network utilizing pairwise loss
+- Slower, need more training data (verify capacity requirements before electing this approach)
+- Helps if we are using the *online training data generation method*
+- We have to rank two documents $i$ and $j$ for given query
+    - Feed corresponding feature vectors $x_i$ and $x_j$ to model, model gives relevance scores $s_i$ and $s_j$
+    - Compute scores ($s_i$ and $s_j$) such that probability of document $i$ being ranked higher than $j$ is close to that of ground truth
+
+## Filtering Results
+
+Filter our misinformative, offensive, inappropriate results, despite the user engagement. 
+- We would need another specialized model for this.
+- Training data can be from human rater feedback, online user feedback
+- Features: website historical report rate, sexually explicit terms used, domain name, document word embeddings
+- Then feed into classification algorithm
