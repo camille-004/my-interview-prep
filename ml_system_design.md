@@ -29,6 +29,21 @@
         3. [Applications](#applications)
             1. [Computer Vision](#computer-vision)
             2. [NLP](#nlp)
+2. [Search Ranking](#search-ranking)
+    1. [Problem Statement](#problem-statement)
+        1. [Clarifying Questions](#clarifying-questions)
+            1. [Problem Scope](#problem-scope)
+            2. [Scale](#scale)
+            3. [Personalization](#personalization)
+    2. [Metrics](#metrics)
+        1. [Online Metrics](#online-metrics)
+            1. [Click-Through Rate](#click-through-rate)
+            2. [Successful Session Rate](#successful-session-rate)
+            3. [Caveat](#caveat)
+        2. [Offline Metrics](#offline-metrics)
+            1. [NDCG](#ndcg)
+            2. [Caveat](#caveat)
+    3. [Architectural Components](#architectural-components)
 
 # Practical ML Techniques
 
@@ -262,3 +277,121 @@ If the new dataset is larger, then we load the weights of the pre-trained model 
 Need to generate the *dense representation* of textual terms. A few of the popular term representation models that use a self-supervised learning approach, trained on massive datasets are Word2Vec, BERT, and ELMO. The term representation based on hese models capture their semantic meanings. Hence, we can transfer knowledge from this learned task in many of the NLP tasks.
 
 We can utilize these embeddings in a NER classifier, spam detector classifier, search ranking, language understanding, etc., and can improve the quality of these ML models.
+
+# Search Ranking
+
+## Problem Statement
+
+The interviewer has asked you to design a search relevance system for a search engine.
+
+### Clarifying Questions
+
+Clarify the problem statement by specifying three aspects:  **scope**, **scale**, and **personalization**
+
+#### Problem Scope
+
+> Is it a general search engine like Google or Bing or a specialized search engine like Amazon products search?
+
+We are narrowing down the problem scope. For now, assume we are working on finding relevant search results like Google or Bing search, but the techniques apply to all search engine. Problem statement can be described as:
+
+> Build a generic search engine that returns relevant results for queries like "Richard Nixon", "programming languages", etc.
+
+This will require us to build a MLM system that provides the most relevant results for a search query by ranking them in order of relevance. This is the **search ranking problem**.
+
+#### Scale
+
+Questions for scale:
+- How many websites exist that you want to enable through this search engine?
+- How many requests per second do you anticipate to handle?
+
+We will assume that we have billions of documents to search from, and the search engine is getting around 10K QPS (queries per second).
+
+#### Personalization
+
+> Is the searcher a logged-in user or not?
+
+This will define the level of personalization that we can incorporate to improve the relevance of our results. Assume the user is logged in and we have access to their profile and historical searched data.
+
+## Metrics
+
+Selecting the wrong metric could result in the model becoming optimized for a completely wrong criterion. Two types of metrics to evaluate the success of a search query:
+1. Online metrics
+2. Offline metrics
+
+### Online Metrics
+
+Base the success of a search session on *user actions*. On a per-query level, we could define success as the user action of *clicking on a result*.
+
+#### Click-Through Rate
+
+$$
+\text{Click-through-rate} = \frac{\text{Number of clicks}}{\text{Number of impressions}}
+$$
+
+An impression means a view. For example, when a search engine result page loads and the user has seen the result, you will consider that as an impression. A click on that result is your success.
+
+#### Successful Session Rate
+
+We can't judge with the click-through rate alone, because unsuccessful clicks can be counted towards a search success. This might include short clicks where the searcher only looked at the resultant document and clicked back immediately. We could solve this issue by filtering our data to only successful clicks, or considering clicks that have a long dwell time.
+
+**Dwell time** is the length of time a searcher spends viewing a webpage after they've clicked a link on a search engine result page.
+
+So, the session success rate is
+
+$$
+\text{Session success rate} = \frac{\text{no. of successful session}}{\text{no. of total sessions}}
+$$
+
+#### Caveat
+
+**Zero-click searched**: A search engine may answer the searcher's query right at the top such that the searcher doesn't need any further clicks to complete the search. Click-through rate would not work in this case (but should still be included in the definition of a successful session)
+
+**Time to success**
+
+A search session can span over more than one query. 
+- A search for "Italian food" can turn into a search for "Italian restaurants". So, the searcher would have to go over multiple results.
+
+For scenarios like this, a *low number of queries per session* means that your system was good at guessing what the searcher actually wanted despite their poorly worded query. 
+- So, in this case, we would consider a *low number of queries per session* in our definition of a successful search session.
+
+## Offline Metrics
+
+Makes use of trained human raters: they are asked to rate the relevance of the query results objectively, keeping in view well-defined guidelines. The ratings aggregated across a query sample serve as the *ground truth*.
+
+### NDCG
+
+**Normalized discounted cummulative gain** is a critical evaluation metric for any ranking problem. It's an improvement of of *cumulative gain*.
+
+$$
+CG_p=\sum_{i=1}^{p}\text{relevance of document} i
+$$
+
+- Documents $D_1$ up to $D_4$ have the following ratings from a rater: $3, 2, 3, 0$, so $CG_4=3+2+3+0=8$
+- *Discounted cumulative gain*: penalize ranking if grounth truth relevant documents lower in result list
+
+$$
+DCG_p=\sum_{i=1}^p \frac{\text{relevance}_i}{\text{log}_2(i+1)}
+$$
+
+- $DCG_4=3+1.262+1.5+0=5.762$
+- Denominator penalizes search engine for ranking more useful $D_3$ later
+- Then normalize for list length
+
+$$
+NDCG_p=\frac{DCG_p}{\text{Ideal} DCG_p}
+$$
+
+- Ideal calculated from human-made ranking
+- Then NDCG will give range in 0 to 1, where closer to 1 is better performance
+- For multiple queries:
+
+$$
+NDCG=\frac{\sum_{i=1}^{N} NDCG_i}{N}
+$$
+
+### Caveat
+Doesn't penalize irrelevant search results, i.e., didn't penalize $D_4$ above
+- Remedy is human rater assigning negative relevance score to that document
+
+## Architectural Components
+
