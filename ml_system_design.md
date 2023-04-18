@@ -44,6 +44,12 @@
             1. [NDCG](#ndcg)
             2. [Caveat](#caveat)
     3. [Architectural Components](#architectural-components)
+        1. [Query Rewriting](#query-rewriting)
+        2. [Query Understanding](#query-understanding)
+        3. [Document Selection](#document-selection)
+        4. [Ranker](#ranker)
+        5. [Blender](#blender)
+        6. [Training Data Generation](#training-data-generation)
 
 # Practical ML Techniques
 
@@ -395,3 +401,32 @@ Doesn't penalize irrelevant search results, i.e., didn't penalize $D_4$ above
 
 ## Architectural Components
 
+![SERP](serp_architecture.png)
+
+### Query Rewriting
+- Poorly worded queries
+- This will maximize recall (more relevant search results)
+- Spell checker, query expansion ("Italian restaurant" $\rightarrow$ "Italian food, recipes" ) or query relaxation ("good Italian food" $\rightarrow$ "Italian food")
+
+### Query Understanding
+- Find out intent: "gas station" is local intent, "earthquake" is news intent, could be a feature
+
+### Document Selection
+- Millions of documents are relevant to "sports"
+- More focused on recall, uses simpler technique to sift through billions of documents (more on this later)
+- Documents go through additional screening, ranking component has reduced workload, so more complex modeling options with greater precision
+
+### Ranker
+- ML to find the best order of documents = "learning to rank"
+- Large amount of documents returned from document selection stage (>10k), amount of incoming traffic is huge (>10k QPS) $\rightarrow$ multiple stages of ranking
+    - Stage 1, for say, 100k documents, is nanoseconds-fast linear model
+    - Stage 2, deep learning, to find optimized order of top 500 given by stage one
+
+### Blender
+- Relevant results from search vertical like images, videos, news, local results, blog posts
+- Satisfies searcher and engages them by making results more relevant
+- Want to diversify results as well
+
+### Training Data Generation
+- Cyclic manner of ML system: takes online user engagement data from SERP displayed in response to queries and generates positive and negative training examples
+- Feed training data to ML models trained for ranking
