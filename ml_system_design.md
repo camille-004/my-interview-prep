@@ -50,8 +50,11 @@
         4. [Ranker](#ranker)
         5. [Blender](#blender)
         6. [Training Data Generation](#training-data-generation)
-
-# Practical ML Techniques
+    4. [Document Selection](#document-selection)
+        1. [Selection Criteria](#selection-criteria)
+        2. [Relevance Scoring Scheme](#relevance-scoring-scheme)
+            1. [Terms Match](#terms-match)
+    5. [Feature Engineering](#feature-engineering)
 
 ## Performance and Capacity Consideration
 
@@ -430,3 +433,81 @@ Doesn't penalize irrelevant search results, i.e., didn't penalize $D_4$ above
 ### Training Data Generation
 - Cyclic manner of ML system: takes online user engagement data from SERP displayed in response to queries and generates positive and negative training examples
 - Feed training data to ML models trained for ranking
+
+## Document Selection
+> 100 billion documents on the web $\rightarrow$ 100k documents selected related to the query
+
+First, query expansion. Match the term "Italian", and match the term "restauraunt" OR "food"
+
+### Selection Criteria
+- All documents/terms stored in **index**, which is a mapping of the words to the list of documents they appear in
+- This could calculate the relevance score alongside checking if each document matches criteria at all
+- Will have selected relevant documents sorted according to relevance score
+
+### Relevance Scoring Scheme
+- **Weighted linear combination** of different factors:
+    - Terms match (maybe with 0.5 weight)
+    - Document popularity (0.125)
+    - Query intent match (0.125)
+    - Personalization match (0.125)
+- Weights decided through intuition or can be decided by ML (done in the ranking stage)
+
+#### Terms Match
+Use **IDF score**, or **inverse document frequency** to weigh the match
+- Match for important terms in the query weighs higher
+
+$$
+IDF=\text{log}_2\frac{N}{DF}
+$$
+
+where $DF$ is the number of documents in which the term appears, so from this, term match for "IItalian" may have more weight
+
+## Feature Engineering
+
+> **Four actors for search**
+> 1. Searcher
+> 2. Query
+> 3. Document
+> 4. Context (i.e., search history, age, gender, location, previous queries)
+
+### Searcher-Specific Features
+Age, gender, interests can be features
+- **Gender-based**: Search for "clothing brands" $\rightarrow$ has searcher shown previous interest in *male* or *female* clothing?
+- **Interest-based**: Search for "shooting" $\rightarrow$ has searcher shown previous interest in shooting for photography or arcade shooting?
+
+### Query-Specific Features
+**Query historical engagement**
+- *Prior* engagement can be feature
+- Search "earthquake", historical data suggests it's a news component b/c most people who searched for it wanted news about recent earthquakes
+
+**Query intent**
+- Use this feature to assign higher rank to documents that match query'y intent
+- "Pizza places" search $\rightarrow$ intent is *local*, will get it from **query understanding component**
+
+### Document-Specific Features
+
+**Page rank**
+- Rank of document
+- Estimate this by looking at number and quality of documents that link to it
+
+**Document engagement radius**
+- Document on coffee shop in Seattle would be more relevant to people living within ten-mile radius
+- Document on Eiffel Tower might interest people all over the world
+- *local scope of appeal* vs. *global scope of appeal*
+
+### Context-Specific Features
+
+- **Time of search**, time of day, so the model can display restaurants open at that hour
+- **Recent events**, useful when querying a location such as "Vancouver"
+    - From previous queries: If user searches "go", do we want to show the programming language Go or definition of the word "go"? If they searched for "C++ coding" before, probably the "Go" programming language
+
+### Searcher-Document Features
+Consider both the searcher and the document
+- Ditsance between searcher and matching locations
+- User's historical engagement with the *result type* of the document, important if user tries to "re-find" the document
+
+### Query-Document Features
+
+**Text match**
+- In *title* and *metadata* or *content* of document
+
