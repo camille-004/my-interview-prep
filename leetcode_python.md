@@ -6,6 +6,7 @@
 4. [Logger Rate Limiter](#logger-rate-limiter)
 5. [LRU Cache](#lru-cache)
 6. [Merge Binary Trees](#merge-binary-trees)
+7. [Merge Intervals](#merge-intervals)
 
 ## Spiral Matrix
 
@@ -204,3 +205,22 @@ class Solution:
         
         return None
 ```
+
+## Merge Intervals
+
+https://leetcode.com/problems/merge-intervals/submissions/937068506/
+
+```python
+class Solution:
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        intervals.sort(key=lambda x: x[0])
+        merged = [intervals[0]]
+
+        for interval in intervals[1:]:
+            if interval[0] <= merged[-1][1]:
+                merged[-1][1] = max(merged[-1][1], interval[1])
+            else:
+                merged.append(interval)
+        
+        return merged
+```  
