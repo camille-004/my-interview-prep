@@ -532,6 +532,40 @@ Finally, it creates a proximity matrix, i.e., a square matrix with entry as 1 on
 3. At this steps, we subtract the number of votes for the correct class in the variable k-permuted data from the number of votes for the correct class in the original OOB data.
 4. Now, the raw importance score for variable k is the average of this number over all trees in the forest. Then, normalize the score by taking the standard deviation.
 
+## Bagging vs. boosting vs. stacking?
+
+**Bagging**
+- Randomly sample from i.i.d. training dataset using bootstrap
+- Builds one model ("weak learner") for each random sample
+- Aggregates predictions from each model
+- **Random forest uses this**
+
+| Pros      | Cons |
+| ----------- | ----------- |
+| Reduces variance and can correct overfitting | Large memory and CPU used when training in parallel |
+| Parallel training is time efficient |  |
+| Robust to missing data (each DT uses a subset of records and features, only portion of models affected by missing data |  | 
+
+
+**Boosting**
+- Train multiple model using same algorithm sequentially, each models focuses on errors made in the previous model
+- More weight on wrong predictions
+- **Gradient Boosted Trees use this.** Builds many shallow decision trees
+
+| Pros      | Cons |
+| ----------- | ----------- |
+| Reduces prediction bias because focuses on correcting wrong predictions | Sequential training takes longer |
+| One model at a time, so less memory and CPU needed compared to bagging |  |
+
+**Stacking**
+- Train using different algorithms independently
+- Predictions from individual models are used as features/predictors of a "meta-model"
+- Base models can be XGB, RF, NN. Meta-learner can be ridge regression
+
+| Pros      | Cons |
+| ----------- | ----------- |
+| Diverse algorithms with different assumptions, so incorporating advantages of all over those | Longer time to train models and make predictions, not a good choice for production model that needs fast prediction |
+| Stacking algorithms have higher accuracy, commonly used in competitions |  |
 
 # XGBoost
 
