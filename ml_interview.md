@@ -48,6 +48,8 @@ Transforms the target variable in a way that our data follow the normal distribu
 
 ## How do verify this that a model is suffering from multicollinearity and build a better model?
 
+See this section for a more detailed answer: https://github.com/camille-004/my-interview-prep/blob/d3289cc6c1245a74f952e0b166c091d9eb2c6180/probability_stats.md#multicollinearity
+
 You should create a correlation matrix to identify and remove variables with a correlation above 75%. Keep in mind that this threshold is subjective. 
 
 You could also calculate **VIF (variance inflation favor)** to check.
