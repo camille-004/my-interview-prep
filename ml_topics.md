@@ -571,3 +571,13 @@ $$
 $$
 
 Continue iteratively until convergence.
+
+**Advantages**:
+- Guaranteed increase of likelihood with each iteration
+- Easy to implement
+- Solution for M-step often exists in closed form
+
+**Disadvtanges**:
+- Often slow convergence
+- Can make convergence to local optima only
+- Requires both forward and backward probabilities
