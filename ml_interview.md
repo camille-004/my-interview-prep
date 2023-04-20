@@ -19,8 +19,9 @@
 17. [Validation and Metrics](#validation-and-metrics)
 18. [Discriminative and Generative Models](#discriminative-and-generative-models)
 19. [Parametric Models](#parametric-models)
-20. [SQL](#sql)
-21. [Data Structures](#data-structures)
+20. [Time Series Forecasting](#time-series-forecasting)
+21. [SQL](#sql)
+22. [Data Structures](#data-structures)
 
 # General ML Questions
 
@@ -624,7 +625,7 @@ Parametric models have a **finite number of parameters**. You only need ot know 
 
 Non-parameteric models have **unbounded number of parameters** to offer flexibility. For data predictions, you need the parameters of the model and the state of the observed data. Common examples are as follows: k-nearest neighbors, decision trees, and topic models.
 
-# Time Series
+# Time Series Forecasting
 
 ## Which cross-validation technique would you choose for a time series dataset?
 
@@ -635,6 +636,108 @@ A time series is not randomly distributed but has chronological ordering. You wa
 - Fold 3: training [1, 2, 3] test [4]
 - Fold 4: training [1, 2, 3, 4], test [5]
 - Fold 5: training [1, 2, 3, 4, 5], test [6]
+
+Or walk-forward validation: See https://github.com/camille-004/my-interview-prep/blob/main/resume_topics.md
+
+## What is the moving average?
+
+A technique used to smooth out time series data by calculating the averge value of a given number of past observations.
+- **Simple moving average (SMA)**: Calculates the average of the last $n$ observations
+- **Exponential moving average (EMA)**: Give more weight to the recent observations and less to older ones
+
+## What is Auto Regression (AR)?
+
+Models the relationships between a dependent variable and its lagged values. In an AR model, the value of the dependent variable at a point in given time is regressed on one or more of its past values, creating a linear relationship between the variable and its own lagged values.
+
+$$
+Y_t=c+\phi_1Y_{t-1}+\phi_2Y_{t-2}+...+\phi_pY_{t-p}+\epsilon_t
+$$
+
+$\phi_1$ to $\phi_p$ are the coefficients of the lagged values, $p$ is the nubmer of lags in the model, and $\epsilon_t$ is an error term. The order of the AR model is determiend by the number of lags used in the equation.
+
+## What is the difference between ARMA and ARIMA?
+
+**ARMA**: Assumes stationarity (mean and variance are constant over time). Two components:
+- *Auto-regressive (AR)*: Models dependence of series on its own past values
+- *Moving-average (MA)*: Models dependence on past error terms
+
+**ARIMA**: Non-stationary time series data
+- *"Integrated"*: Differencing component, used to remove trends and seaonality
+
+## Can you explain RNN and LSTM, and when you use each for TSA?
+
+RNNs can take inputs of any length and use their internal state to remember informataion about previous inputs.
+- Good for short-term dependencies and simple patterns
+- Easier to train and optimize, simpler than LSTMs
+
+LSTM is a variant of RNN that is particularly well-suited for time series analysis.
+- Use memory cell to store information about past inputs and selectively forget/remember information based on current input
+- Good for long-term dependencies and avoiding vanishing gradient problem (when weights become very small as they are propagated back through layers)
+- Often the case with seasonal variations and trends that traditional models may struggle to capture
+
+## How the IQR (Interquartile Range) is used in Time Series Forecasting?
+
+- **IQR**: Differnece between the 75th and 25th percentiles of the dataset, range of middle 50% of data
+- Can be used to detect outliers, which can then be removed or adjusted to improve accuracy of forecast
+- Use IQR to identify trends, seaonality through different time periods
+
+## What methods will you use to measure the similarity/difference between two time-series vectors?
+
+- **Euclidean distance**: Straight-line distance between two time series vectors in Euclidean space, squared root of sum of squared differences between corresponding values
+  - Sensitive to outliers, doesn't take into account shape, but simple to implement
+- **Dynamic type warping (DTW)**: Find optimal alignmnent between two time series, each value paired with a value in the other series. More flexible for comparison of series of different lengths or shifted in time
+  - Flexible to different series, robust to noise and outliers, but computationally expensive or not good with series of complex shapes or multiple peaks
+- **Cosine similarity**
+  - Fast and efficient, robust to differences in amplitude, but does not take into account temporal ordering of data
+- **Pearson correlation coefficient**: Linear correlation, divde covariance of two vectors by product of their standard deviations
+  - Assumes normal distribution and linear relation, but can be useful for identifying trends and patterns
+- **Fourier transform**: Convert data from time domain to frequency domain, then calculate similarity on frequency components
+  - Sensitive to outliers and non-periodic or irregular patterns, but can be good for identifying seasonality and frequency components
+
+## Can non-sequential deep learning models outperform sequential models in time series forecasting?
+
+Advantage of non-sequential models: Can capture temporal dependencies as they can learn to extract feature from local patterns, like CNN. Transformers can model long-term dependencies and patterns over time while CNNs can learn patterns in short segments of the time series.
+- Also can be more computationally efficient and require less memory, good for large datasets or real-time predictions
+
+## How do you normalize time series data?
+
+- **Min-max normalization**: Minimmum value is 0 and maximum value is 1
+- **Z-score normalization/standardization**: Mean of 0 and standard deviation of 1
+- **Log transformation**: Logarithmic transformation to data to reduce the range of values and compress any extreme values, reduce skewness
+
+## What is cross-correlation?
+
+One signal shifted by time lag then multiplied point-wise with the other signal. Resulting product summed over all time points to give cross-correlation value for that time lag. Process repeated for different time lags to obtain full CC function.
+
+$$
+C(t)=\text{sum}(x_n\cdot y_{n+t})), \forall n 
+$$
+
+Gives info. about time delay and similarity between two signals
+- Can also be used for feature extraction or pattern recognition
+Similar: CC will have a peak at time lag corresponding to delay
+
+## What is exponential smoothing and when do we need it?
+
+Gives more weight to recent observations and less weight to older ones
+- Suitable for TS data that exhibits a trend or seasonality
+- Short-term forecasting, where data contains large amount of noiose or volatility, and traditional statistical methods might not be appropriate
+
+## How would you prepare your data before time series forecasting?
+
+- _Data cleaning_: Remove missing, duplicate, erroneous values
+- _Transformation_: First or second differencing to make it more stationay, log or Box-Cox transformation to stabilize variance
+- _Normalization_: See question above
+- _Feature engineering_: Lagged variables, seasonality, external predictors
+
+## What is seasonality in time series and how can you deal with different types of seasonality in time series modelling?
+
+Periodic fluctuations that occur at regular intervals, such as daily, weekly, yearly
+- Caused by factors such as weather, holidays, economic cycles
+
+- **Additive seasonality**: Seasonal component is independent of the level, can be modeled by subtracting the seasonal component from the data (by computing average value for each time point across all seasons and subtracting from data)
+- **Multiplicative seasonality**: Seasonal component varies with level, can be modeled by dividing the data by seasonal component
+- Use SARIMA
 
 # SQL
 
