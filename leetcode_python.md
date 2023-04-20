@@ -102,3 +102,24 @@ def longestCommonPrefix(self, strs: List[str]) -> str:
     return res_str
 ``` 
 
+## Logger Rate Limiter
+
+https://leetcode.com/problems/logger-rate-limiter/
+
+```python
+class Logger:
+
+    def __init__(self):
+        self.logged_messages = {}
+
+    def shouldPrintMessage(self, timestamp: int, message: str) -> bool:
+        if message not in self.logged_messages.keys():
+            self.logged_messages[message] = timestamp
+            return True
+        else:
+            if timestamp < self.logged_messages[message] + 10:
+                return False
+            else:
+                self.logged_messages[message] = timestamp
+                return True
+```
