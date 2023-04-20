@@ -629,4 +629,65 @@ Filter our misinformative, offensive, inappropriate results, despite the user en
 - We would need another specialized model for this.
 - Training data can be from human rater feedback, online user feedback
 - Features: website historical report rate, sexually explicit terms used, domain name, document word embeddings
-- Then feed into classification algorithm
+
+# Recommendation System
+
+## Problem Statement
+
+Display media (movie/show) recommendations for a Netflix user. Make recommendations in such a manner that the chance of the user watching them is maximized.
+- Netflix's system = good, doesn't simply recommend trending movies/shows with little regard for the user's preferences
+- At most, usual recommender systems would look at viewer's past wawtches and recommend movies/shows of the same genre
+- Netflix's recommendations are also diverse. Not based on guesses, but also *other users' watch histories*
+    - New content for user's they wouldn't have discovered otherwise
+
+### Scope of the Problem
+1. The total number of subcribers on the platform as of 2019 is 163.5 million
+2. There are 53 million international daily active users.
+
+- Therefore, need system for large number of users, good recommendations on a daily basis
+- **Common approach**: Predict the probability of user engagement with the content, so
+
+> Given a user and context (time, location, and season), predict the probability of engagement for each movie and order movies using that score.
+
+### Formulation
+
+- Users should watch the recommendation, so use *implicit feedback* (binary values of whether user has watched the show)
+- Could we use _explicit feedback_? i.e., star rating
+- Easier to collect large amount of training data $\righarrow$ better personalization
+    - Harder with explicit feedback since people seldom rate movies after watching them
+    - Hence, MNAR problem with explicit feedback: They might rate movies that they really liked or really didn't like, but not in between
+    - Movies with fewer ratings have less impact on the recommendation process
+
+## Metrics
+- Different models trained for task of recommendation $\rightarrow$ best model will be selected offline
+    - _Offline with held-out test data_ (historical interaction of users with recommended media). If its performance gain is worth the engineering effort to bring it into a production environment, best performing model will then be selected for an _online_ A/B test on live data
+
+### Online metrics
+#### Engagement Rate
+- Session with clicks / total number of sessions
+- User might click on recommended movie but not complete watching it
+- Only using this metric will provide incomplete picture
+
+#### Videos Watched
+- Average number of videos user has spent at least a significant time watching, i.e., more than two minutes
+- But problematic when it comes to user starting to watch movie/series recommendations
+- Might miss out on overall user satisfaction
+
+#### Session Watch Time
+- Overall time a user spends watching content based on recommendation in a session
+- User A engages with five recommendations, spends teen minutes watching three of them and then ends the session
+- Other end, user B engages with two recommendations, spends five minutes on first then 90 minutes on second recommedation
+- User A engaged with more content, but user B is clearly more successful as they found something interesting to watch
+
+### Offline Metrics
+
+#### mAP @ N
+Mean Average Precision @ N (length of recommendation list)
+
+Precision measures the raio between the relevant recommendations and total recommendations in movie recommendation list.
+
+$$
+P=\frac{\text{number of relevant recommendations}}{\text{total number of recommendations}}
+$$
+
+TODO Finish
