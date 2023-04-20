@@ -4,6 +4,14 @@
 
 1. [Merge k arrays (in this case k = 2) and sort them](#merge-k-arrays-in-this-case-k--2-and-sort-them)
 2. [How to best select a representative sample of search queries from 5 million?](#how-to-best-select-a-representative-sample-of-search-queries-from-5-million)
+3. [Rainy Seattle Probability](#rainy-seattle-probability)
+4. [Naive Bayes and Threshold](#naive-bayes-and-threshold)
+5. [MapReduce](#mapreduce)
+6. [SVM Explanation](#svm-explanation)
+7. [Detecting Outliers](#detecting-outliers)
+8. [Bias-Variance Tradeoff](#bias-variance-tradeoff)
+9. [Gradient Boost Description](#gradient-boost-description)
+10. [Maximum Sum Subsequence](#maximum-sum-subsequence)
 
 ## Merge k arrays (in this case k = 2) and sort them.
 
@@ -74,7 +82,8 @@ For an ML model, we want the minimum amount of information that is required to l
 - Comparing the sample and population: Compare categorical variable with the chi-square test, and numerical variables with the KS-test. Both statistical tests work under the null hypothesis that the sample has the same distribution as the population.
 - Since a sample is made by many columns and we want all of them to be significant, we can reject the null hypothesis is the $p$-value of at least one of the tests is lower than the confidence level. We want every column to pass the significance test in order to accept the sample as valid.
 
-## Three friends in Seattle told you it's rainy. Each has a probability of 1/3 of lying. What's the probability that Seattle is actually rainy? Assume a prior probability of 0.25 for Seattle being rainy.
+## Rainy Seattle Probability
+**Three friends in Seattle told you it's rainy. Each has a probability of 1/3 of lying. What's the probability that Seattle is actually rainy? Assume a prior probability of 0.25 for Seattle being rainy.***
 
 For Seattle to be rainy, our friends have to be telling the truth, of which there is a probability of 2/3. So, we should simply find the probability that Seattle is rainy and our friends are telling the truth.
 
@@ -94,7 +103,8 @@ $$
 P(\text{raining} | \text{all say yes}) = \frac{(2/3)^2 \cdot 0.25}{(1/3)^2 \cdot 0.75 + (2/3)^2 \cdot 0.25} \approx 0.57
 $$
 
-## Can you explain the fundamentals of Naive Bayes? How do you set the threshold?
+## Naive Bayes and Threshold
+**Can you explain the fundamentals of Naive Bayes? How do you set the threshold?**
 
 Naive Bayes classifiers are a collection of classification algorithms. These classifiers are a family of algorithms that share a common principle. NB classifiers assume that the occurrence of absence of a feature does not influence the presence or absence of another feature ("naive" assumption). Bayes' Theorem is how we find a probability when we know other probabilities. In other words, it provides the posterior probability of a prior knowledge event. This theorem is a principled way of calcultaing conditional probabilities.
 
@@ -108,7 +118,8 @@ $$
 
 The G-mean is an unbiased evaluation metric and the main focus of threshold moving. And we could visualize where the G-mean occurs on the ROC curve, which is calculated from the predicted probabilites.
 
-## Can you explain what MapReduce is and how it works?
+## MapReduce
+**Can you explain what MapReduce is and how it works?**
 
 MapReduce facilitates concurrent processing by splitting petabytes of data into smaller chunks, and processing them in parallel on Hadoop commodity servers. At the crux of MapReduce are two functions: Map and Reduce. They are sequenced one after the other.
 - **Map**: Takes input from the disk as <key, value> pairs, processes them, and produces another set of <key, value> pairs as output.
@@ -124,13 +135,15 @@ Two intermediate steps:
 
 ![MapReduce](mapreduce.png)
 
-## Can you explain SVM?
+## SVM Explanation
+**Can you explain SVM?**
 
 SVM is a supervised machine learning algorithm which works on both classifiaction and regression problems. It tries to classify data by finding a hyperplane that maximizes the margin between the classes in th etraining data. Hence, SVM is an example of a large margin classfiier. The basic ideas of support vector machines:
 - Optimal hyperplane for linearly separable patterns
 - Extend to patterns that are not linearly separable by transformations of original data to map into new space (kernel trick)
 
-## How do you detect if a new observation is an outlier?
+## Detecting Outliers
+**How do you detect if a new observation is an outlier?**
 
 1. **Standard Deviation**:
 - Check if a data point is more than three times the standard deviation. In a normal distribution, it would be greater or less than about 99.7 percent of the data.
@@ -156,7 +169,8 @@ SVM is a supervised machine learning algorithm which works on both classifiactio
 - It partitions data recursively using random splits. 
 - The limitations are that the final anomaly score depends on the contamination parameter, which implies that we should have an idea of what percentage of the data is anomalous beforehand to get a prediction. Also, the model suffers from a bias due to the way the branching takes place.
 
-## What is the bias-variance tradeoff?
+## Bias-Variance Tradeoff
+**What is the bias-variance tradeoff?
 
 With any model, we generally are trying to estimate a true underlying:
 
@@ -175,7 +189,8 @@ There is a tradeoff between bias and variance, and this is a useful framework fo
 
 See the ML system design doc.
 
-## Describe the working of gradient boost.
+## Gradient Boost Description
+**Describe the working of gradient boost.**
 
 It works on the concept of the stagewise addition method, where many weak learners are trained, and in the end, we get a strong learner as a result. A particular weak learner is trained on the dataset, and the errors or mistakes made by the algorithm are notes. Now, while training a second weak learner algortihm, the errors and te mistakes made by the previous algorithm are passed into the second weak learner algorithm to avoid the same mistake.
 
@@ -188,7 +203,8 @@ The prediction of the first model is always the mean of the target training data
 2. The loss functions should be differentiable at all points.
 3. There is no restriction for the number of iterations.
 
-## Find the maximum sum of a subsequence in an integer list.
+## Maximum Sum Subsequence
+**Find the maximum sum of a subsequence in an integer list.**
 
 To return the sum:
 
