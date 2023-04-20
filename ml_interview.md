@@ -610,13 +610,27 @@ In tree algorithms, branch directions for missing values are learned during trai
 - Decision is taken to minimze the loss
 - *If no missing values during training time, new points with missing values sent to right node by default* 
 
+## How can we improve the performance of the gradient boosting algorithm?
+- Increase maximum leaf nodes of the algorithm, i.e., increase the weak learners' tree depth
+- Increase the number of iterations
+- Choose a lower learning rate, maybe between 0.1 and 0.4
+- Implement regularization techniques
+
 # SVM
+
+## Explain the SVM algorithm in detail.
+
+The basic idea behind SVM is to find a hyperplane in the feature space that separates the two classes with the maximum margin. The margin is the distance between the hyperplane and the nearest data points of each class. The intuition is that a larger margin translates to a better generalization performance of the classifier on unseen data. For binary classification:
+- SVMs use a kernel function to implicitly map the input data into a higher-dimensional feature space where the classes are more separable.
+- The objective function of the optimization problem is to minimize the magnitude of the weights while ensuring that the hyperplane correctly separates the two classes.
+- The data points that lie on the margin or on the wrong side of the hyperplane are called **support vectors**. They are the critical points that determine the location of the hyperplane. The SVM algorithm only depends on the support vectors and not on the entire dataset.
 
 ## Why does XGBoost perform better than SVM?
 
 XGBoost is an **ensemble method** that uses many trees. This means it improves as it repeats itself.
 
 SVM is a **linear separator**. So, if our data is not linearly separable, SVM requires a kernel to get the data to a state where it can be separated. This can limit us, as there is not a perfect kernel for every given dataset.
+
 
 # Naive Bayes
 
@@ -638,6 +652,12 @@ In ML, Bayes' theorem is used in a probability framework that fits a model to a 
 Naive Bayes classifiers are a **collection of classification algorithms**. These classifiers are a family of algorithms that share a common principle. NB classifiers assume that the occurrence of absence of a feature does not influence the presence or absence of another feature ("naive" assumption).
 
 When the assumption of independence holds, they are easy to implement and yield better results than other sophisticated predictors. They are used in spam filtering, text analysis, and recommendation systems.
+
+## When would we want to use Naive Bayes over another model?
+- Naive Bayes is computationally efficient, making it well-suited for large datasets or real-time applications.
+- Naive Bayes is easy to implement and interpret, requiring minimal hyperparameter tuning. It is also less prone to overfitting, making it less likely to perform poorly on unseen data.
+- Naive Bayes can be trained with a small amount of data, making it useful when there are limited labeled examples.
+- Naive Bayes works well with high-dimensional data, such as text data, where the number of features can be very large.
 
 # Clustering
 
@@ -677,6 +697,10 @@ The ROC curve is a graphical representation of the performance of a classificati
 ## What evaluation approaches would you use to gauge the effectiveness of an ML model?
 
 First, split the dataset into training and test sets. You could also use a cross-validation technique to segment the dataset. Then, you would select and implement performance metrics. For example, you could use the confusion matrix, the F1 score, and accuracy.
+
+## Explain cross-validation.
+
+Cross-validation is a technique to evaluate the performance of a model on unseen data. In k-fold cross validation, the data is divided into $k$ equal-sized partitions or folds. The process is repeated $k$ times, with each fold used as the validation set.
 
 ## What is a confusion matrix? Why do we need it?
 
@@ -819,6 +843,12 @@ Periodic fluctuations that occur at regular intervals, such as daily, weekly, ye
 ## In SQL, how are primary and foreign keys related?
 
 Foreign keys allows you to **match and join tables** on the primary key of the corresponding table.
+
+## Explain Star Schema.
+
+Star schema organizes data into a central fact table and a set of related dimension tables, resembling a star shape. The fact table in the star schema contains the keys to the dimension tables. The dimension tables contain descriptive attributes or characteristics that provide context for the measurements in the fact table.
+- Advantages: No need for complex joins when querying
+- Disadvantages: Many-to-many not supported, denormalized (duplicated, inconsistent) data can cause integrity issues
 
 # Data Structures
 
