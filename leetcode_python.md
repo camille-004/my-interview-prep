@@ -3,6 +3,7 @@
 1. [Spiral Matrix](#spiral-matrix)
 2. [Roman to Integer](#roman-to-integer)
 3. [Longest Common Prefix](#longest-common-prefix)
+4. [Logger Rate Limiter](#logger-rate-limiter)
 
 ## Spiral Matrix
 
@@ -122,4 +123,34 @@ class Logger:
             else:
                 self.logged_messages[message] = timestamp
                 return True
+```
+
+## LRU Cache
+
+This is not an optimal solution.
+
+```python
+class LRUCache:
+
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.cache = {}
+        self.keys = []
+
+    def get(self, key: int) -> int:
+        if key in self.cache:
+            # Have to move back to the end once accessed
+            self.keys.remove(key)
+            self.keys.append(key)
+            return self.cache[key]
+        return -1
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            self.keys.remove(key)
+        elif len(self.keys) == self.capacity:
+            del self.cache[self.keys.pop(0)]
+        self.cache[key] = value
+        # Have to move key back to the end since we're "accessing" it again
+        self.keys.append(key)
 ```
