@@ -569,6 +569,47 @@ Finally, it creates a proximity matrix, i.e., a square matrix with entry as 1 on
 
 # XGBoost
 
+
+| Pros      | Cons |
+| ----------- | ----------- |
+| XGB consists of a number of hyperparameters that can be tuned. | Boosting method so sensitive to outliers. |
+| Handles missing values | Has to create dummy variables/label encoding for categorical features, unlike LightGBM |
+| Provides intuitive features such as parallelism, distributed computing | |
+
+## How does XGBoost work?
+
+When using *gradient boosting for regression*, where the weak learners are considered to be regression trees, eaach regression tree maps an input data point to one of its leaves that includes a continuous score.
+- Minimizes a regularized objective function that merges a convex loss function, which is based on the variation between target outputs and predicted outputs
+- Training proceeds iteratively, adding new trees with capability to predict residuals as well as errors of prior trees $\rightarrow$ prior trees coupled with previous trees to make the final prediction
+
+## What are the weights of XGB leaf nodes? How do we calculate them?
+
+"Leaf weight" can be said as the model's predicted output associated with each leaf node. 
+- Example: Test data point with `age = 10` and `gender = female`.
+- To get prediction for data point, tree traversed from top to bottom
+  - At each intermediate node, feature is needed to compare against a threshold
+  - Test `age < 15` is performed first and then proceed to the left branch, then second test `gender = male` is performed, so we proceed to right branch
+  - We end up at Leaf 2, whose output/leaf weight is 0.1.
+
+## How does XGB calculate features?
+
+Automatically provides estimations of feature importance from trained predictive model
+- Retrieves feature importance scores for each attribute, after constructing boosting tree
+- Feature importance contributes a score which indicates how valuable each feature was in construction of boosted decision trees
+
+## Differences between XGBoost and LightGBM?
+
+- Slower than LightGBM but it achieves faster training through the histogram binning process
+- LightGBM is a newer tool, so less users and less documentation
+
+## How does XGB handle missing values??
+
+In tree algorithms, branch directions for missing values are learned during training.
+- Some boosters treat missing values as zeros.
+- During training time XGB decides whether missing values should fall into right node or left node
+- Decision is taken to minimze the loss
+- *If no missing values during training time, new points with missing values sent to right node by default* 
+
 # SVM
 
 ## Why does XGBoost perform better than SVM?
