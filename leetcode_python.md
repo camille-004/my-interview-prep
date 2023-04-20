@@ -1,4 +1,9 @@
 # Leetcode Python Problems (Tagged Microsoft)
+
+1. [Spiral Matrix](#spiral-matrix)
+2. [Roman to Integer](#roman-to-integer)
+3. [Longest Common Prefix](#longest-common-prefix)
+
 ## Spiral Matrix
 
 https://leetcode.com/problems/spiral-matrix/description/
@@ -50,3 +55,50 @@ def spiral_matrix(matrix):
 
     return result
 ```
+
+## Roman to Integer
+
+**Code**
+```python
+def romanToInt(self, s: str) -> int:
+    symbols = {
+        "I": 1,
+        "V": 5,
+        "X": 10,
+        "L": 50,
+        "C": 100,
+        "D": 500,
+        "M": 1000
+    }
+    res = 0
+    i = 0
+    while i < len(s):
+        curr_char = s[i]
+        if i < len(s) - 1 and symbols[s[i + 1]] > symbols[curr_char]:
+            val = symbols[s[i + 1]] - symbols[curr_char]
+            i += 2
+        else:
+            val = symbols[curr_char]
+            i += 1
+        res += val
+
+    return res
+```
+
+## Longest Common Prefix
+
+Beats 85% in terms of speed, 77.17% in terms of memory.
+
+```python
+def longestCommonPrefix(self, strs: List[str]) -> str:
+    res_str = ""
+    for i in range(len(min(strs, key=lambda x: len(x)))):
+        curr_chars = "".join(s[i] for s in strs)
+        if len(set(curr_chars)) == 1:
+            res_str += curr_chars[0]
+        else:
+            break
+
+    return res_str
+``` 
+
