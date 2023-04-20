@@ -4,6 +4,7 @@
 2. [Roman to Integer](#roman-to-integer)
 3. [Longest Common Prefix](#longest-common-prefix)
 4. [Logger Rate Limiter](#logger-rate-limiter)
+5. [LRU Cache](#lru-cache)
 
 ## Spiral Matrix
 
