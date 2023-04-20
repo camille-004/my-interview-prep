@@ -21,6 +21,7 @@
 8. [Classification](#classification)
 9. [Logistic Regression](#logistic-regression)
 10. [Linear Discriminant Analysis](#linear-discriminant-analysis)
+11. [Decision Trees](#decision-trees)
     1. [Training Decision Trees](#training-decision-trees)
     2. [Entropy](#entropy)
     3. [Random Forests](#random-forests)
