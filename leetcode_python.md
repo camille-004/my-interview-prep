@@ -1,10 +1,11 @@
-# Leetcode Python Problems (Tagged Microsoft)
+# Leetcode Python Problems (Tagged Microsoft, or Not)
 
 1. [Spiral Matrix](#spiral-matrix)
 2. [Roman to Integer](#roman-to-integer)
 3. [Longest Common Prefix](#longest-common-prefix)
 4. [Logger Rate Limiter](#logger-rate-limiter)
 5. [LRU Cache](#lru-cache)
+6. [Merge Binary Trees](#merge-binary-trees)
 
 ## Spiral Matrix
 
@@ -154,4 +155,52 @@ class LRUCache:
         self.cache[key] = value
         # Have to move key back to the end since we're "accessing" it again
         self.keys.append(key)
+```
+
+## Merge Binary Trees
+
+```python
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def mergeTrees(self, root1: Optional[TreeNode], root2: Optional[TreeNode]) -> Optional[TreeNode]:
+        # Base case
+        if not root1:
+            return root2
+        if not root2:
+            return root1
+
+        merged = TreeNode(root1.val + root2.val)
+        merged.left = self.mergeTrees(root1.left, root2.left)
+        merged.right = self.mergeTrees(root1.right, root2.right)
+        return merge
+```
+
+First, check if either `root1` or `root2` is `None`. If one of them is `None`, simply return the other tree. If both trees are not `None`, create a new `TreeNode` with the sum of their values, and recursively merge their left and right subtrees by calling `mergeTrees` with the corresponding nodes.
+
+### Corresponding Node in Cloned Binary Tree
+
+Return a reference to the node in a tree that is the clone of an input `original` tree.
+
+```python
+
+class Solution:
+    def getTargetCopy(self, original: TreeNode, cloned: TreeNode, target: TreeNode) -> TreeNode:
+        if not original:
+            return None
+        if original == target:
+            return cloned
+
+        left_copy = self.getTargetCopy(original.left, cloned.left, target)
+        if left_copy:
+            return left_copy
+        
+        right_copy = self.getTargetCopy(original.right, cloned.right, target)
+        if right_copy:
+            return right_copy
+        
+        return None
 ```
