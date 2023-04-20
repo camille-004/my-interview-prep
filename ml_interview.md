@@ -29,7 +29,7 @@
 
 For a small training set, a model with high bias and low variance is better, as it is less likely to overfit (because we are more likely to overfit a small dataset). An example is Naive Bayes.
 
-For a large training set, a model with low bias and high variance is better, as it expresses more complex relationships. An example is logistic regression. 
+For a large training set, a model with low bias and high variance is better, as it expresses more complex relationships. An example is a decision tree. 
 
 ## How do you ensure you are not overfitting a model?
 
